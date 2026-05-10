@@ -54,31 +54,37 @@ os.environ["GOOGLE_API_KEY"] = api_key_clean
 # ==========================================
 # EMBEDDING: REST API v1 LANGSUNG (tanpa SDK wrapper)
 # ==========================================
-def get_embedding(text: str, api_key: str, model: str = "text-embedding-004") -> list:
-    """Memanggil Google Generative Language REST API v1 untuk embedding, dengan retry."""
-    url = (
-        f"https://generativelanguage.googleapis.com/v1/models/"
-        f"{model}:embedContent?key={api_key}"
-    )
-    payload = {
-        "model": f"models/{model}",
-        "content": {"parts": [{"text": text}]}
-    }
-    for attempt in range(3):
-        resp = requests.post(url, json=payload, timeout=30)
-        if resp.status_code == 200:
-            return resp.json()["embedding"]["values"]
-        elif resp.status_code == 429:
-            time.sleep(3 * (attempt + 1))
+def get_embedding(text: str, api_key: str) -> list:
+    """Memanggil Google Generative Language REST API v1 dengan fallback model."""
+    # Daftar model embedding yang akan dicoba
+    embedding_models = ["text-embedding-004", "text-embedding-005", "embedding-001"]
+    
+    last_err = ""
+    for model in embedding_models:
+        url = f"https://generativelanguage.googleapis.com/v1/models/{model}:embedContent?key={api_key}"
+        payload = {
+            "model": f"models/{model}",
+            "content": {"parts": [{"text": text}]}
+        }
+        try:
+            for attempt in range(2):
+                resp = requests.post(url, json=payload, timeout=30)
+                if resp.status_code == 200:
+                    return resp.json()["embedding"]["values"]
+                elif resp.status_code == 429:
+                    time.sleep(2)
+                    continue
+                else:
+                    break
+            
+            # Jika sampai sini berarti gagal untuk model ini
+            err_data = resp.json().get("error", {}).get("message", resp.text)
+            last_err = f"Model {model}: {err_data}"
+        except Exception as e:
+            last_err = str(e)
             continue
-        else:
-            try:
-                err = resp.json().get("error", {}).get("message", resp.text)
-            except Exception:
-                err = resp.text
-            raise Exception(f"Embedding error {resp.status_code}: {err}")
-    raise Exception("Embedding gagal setelah 3 percobaan (rate limit 429).")
-
+            
+    raise Exception(f"Semua model embedding gagal. Error terakhir: {last_err}")
 
 # ==========================================
 # VECTOR STORE SEDERHANA (In-Memory, tanpa chromadb)
@@ -149,23 +155,27 @@ if process_btn:
             if all_chunks:
                 store = SimpleVectorStore()
                 progress = st.sidebar.progress(0, text="Membuat embedding...")
-                errors = 0
+                errors_list = []
+                
                 for i, chunk in enumerate(all_chunks):
                     try:
                         emb = get_embedding(chunk, api_key_clean)
                         store.add_texts([chunk], [emb])
                     except Exception as e:
-                        errors += 1
+                        if len(errors_list) < 3: # Hanya simpan 3 error pertama agar tidak penuh
+                            errors_list.append(str(e))
                     progress.progress((i + 1) / len(all_chunks), text=f"Embedding {i+1}/{len(all_chunks)}...")
-                    time.sleep(0.05)  # Hindari rate limit
+                    time.sleep(0.1)
 
                 progress.empty()
                 st.session_state.vector_store = store
 
-                if errors == 0:
+                if not errors_list:
                     st.sidebar.success(f"✅ {len(all_chunks)} bagian berhasil diindeks!")
                 else:
-                    st.sidebar.warning(f"⚠️ Selesai dengan {errors} error. {len(store.texts)} bagian berhasil diindeks.")
+                    st.sidebar.error(f"❌ Gagal mengindeks: {errors_list[0]}")
+                    if len(store.texts) > 0:
+                        st.sidebar.warning(f"⚠️ Hanya {len(store.texts)} dari {len(all_chunks)} bagian yang berhasil.")
 
 
 # ==========================================
