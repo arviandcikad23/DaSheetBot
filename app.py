@@ -1,6 +1,6 @@
 """
-DaSheet_BOT Professional - Powered by Gemini & Exa AI
-Aplikasi ini dikembangkan untuk memudahkan analisis dokumen teknis 
+DaSheet_BOT by Gemini & Exa AI
+dibuat untuk memudahkan analisis dokumen teknis 
 (seperti datasheet elektronik) menggunakan AI.
 """
 
@@ -23,26 +23,25 @@ def setup_halaman():
     )
 
     # Injeksi CSS untuk mengubah tema warna bawaan Streamlit
-    # agar sesuai dengan identitas visual aplikasi (Putih Tulang & Cyan Kebiruan)
     css_kustom = """
     <style>
-    /* Membesarkan Semua Tulisan (+2px / ~18px) */
+    /* FONT */
     p, div[data-testid="stMarkdownContainer"], span[data-testid="stText"], label, button, input, textarea {
         font-size: 1.15rem !important;
     }
     
-    /* Latar Belakang (Putih Tulang Terang) */
+    /* Background */
     .stApp, [data-testid="stSidebar"], [data-testid="stHeader"] {
         background-color: #FDFCF4 !important;
     }
     
-    /* Memperlebar Sidebar menjadi 400px */
+    /* Sidebar --> 400px */
     [data-testid="stSidebar"] {
         min-width: 400px !important;
         max-width: 400px !important;
     }
     
-    /* Gelembung Chat AI (Cyan Lembut) */
+    /* Gelembung Chat AI */
     [data-testid="stChatMessage"] {
         background-color: #E0F7FA !important;
         border-radius: 10px;
@@ -52,7 +51,7 @@ def setup_halaman():
         box-shadow: 0 2px 4px rgba(0,188,212,0.1);
     }
     
-    /* Gelembung Chat User (Biru Nila) */
+    /* Gelembung Chat User */
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
         background-color: #E8EAF6 !important;
         border-left: 5px solid #5C6BC0 !important;
@@ -64,7 +63,7 @@ def setup_halaman():
         border-top: 2px solid #00BCD4 !important;
     }
     
-    /* Modifikasi Tombol (menghilangkan warna merah bawaan) */
+    /* Modifikasi Tombol */
     .stButton>button[kind="primary"] {
         background-color: #00BCD4 !important;
         border-color: #00BCD4 !important;
@@ -103,7 +102,7 @@ def setup_halaman():
         border-bottom-color: #00BCD4 !important;
     }
 
-    /* Menghilangkan garis kotak (outline) merah saat elemen diklik */
+    /* Menghilangkan garis kotak (outline) */
     *:focus {
         outline-color: #00BCD4 !important;
     }
@@ -118,7 +117,7 @@ def setup_halaman():
 
 
 # ==========================================
-# INISIALISASI VARIABEL SESI (STATE)
+# INISIALISASI VARIABEL SESION  (STATE)
 # ==========================================
 def inisialisasi_sesi():
     if "pesan_chat" not in st.session_state:
