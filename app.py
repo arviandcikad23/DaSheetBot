@@ -13,7 +13,15 @@ except (ImportError, ModuleNotFoundError):
     try:
         from langchain.tools import create_retriever_tool
     except (ImportError, ModuleNotFoundError):
-        from langchain_community.tools.retriever import create_retriever_tool
+        try:
+            from langchain_community.tools.retriever import create_retriever_tool
+        except (ImportError, ModuleNotFoundError):
+            from langchain_core.tools import Tool
+            def create_retriever_tool(retriever, name, description):
+                def func(query: str) -> str:
+                    docs = retriever.invoke(query)
+                    return "\n\n".join([d.page_content for d in docs])
+                return Tool(name=name, description=description, func=func)
 
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
