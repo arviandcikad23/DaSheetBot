@@ -3,10 +3,39 @@ import tempfile
 import os
 import time
 import shutil
+import google.generativeai as genai
+from langchain_core.embeddings import Embeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_chroma import Chroma
+
+# ==========================================
+# CUSTOM EMBEDDING CLASS (Menghindari v1beta routing error)
+# Menggunakan Google GenAI SDK langsung yang memanggil endpoint /v1
+# ==========================================
+class DirectGoogleEmbeddings(Embeddings):
+    def __init__(self, model_name: str = "models/text-embedding-004"):
+        self.model_name = model_name
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        results = []
+        for text in texts:
+            result = genai.embed_content(
+                model=self.model_name,
+                content=text,
+                task_type="retrieval_document"
+            )
+            results.append(result["embedding"])
+        return results
+
+    def embed_query(self, text: str) -> list[float]:
+        result = genai.embed_content(
+            model=self.model_name,
+            content=text,
+            task_type="retrieval_query"
+        )
+        return result["embedding"]
 try:
     from langchain.tools.retriever import create_retriever_tool
 except (ImportError, ModuleNotFoundError):
@@ -121,13 +150,32 @@ if process_btn:
                     shutil.rmtree(persist_dir, ignore_errors=True)
                     time.sleep(1)
                 
-                try:
-                    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
-                    # Test embedding
-                    embeddings.embed_query("test_connection")
-                except Exception as e:
-                    st.sidebar.error(f"Error pada model text-embedding-004: {e}")
-                    raise e
+                # Embedding menggunakan SDK langsung (endpoint /v1, bukan /v1beta)
+                genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+                embedding_models = [
+                    "models/text-embedding-004",
+                    "models/gemini-embedding-exp-03-07",
+                ]
+                embeddings = None
+                for model_name in embedding_models:
+                    try:
+                        emb = DirectGoogleEmbeddings(model_name=model_name)
+                        emb.embed_query("test")
+                        embeddings = emb
+                        st.sidebar.info(f"✅ Embedding aktif: `{model_name}`")
+                        break
+                    except Exception as emb_err:
+                        st.sidebar.warning(f"Model `{model_name}` gagal: {emb_err}")
+                        continue
+                
+                if embeddings is None:
+                    st.sidebar.error(
+                        "❌ Semua model embedding gagal. Pastikan:\n"
+                        "1. Google API Key Anda benar dan valid.\n"
+                        "2. API Key memiliki akses ke Gemini API.\n"
+                        "3. Tidak ada spasi tersembunyi di API Key."
+                    )
+                    raise ValueError("Tidak ada model embedding yang berhasil.")
                 
                 # Storage to ChromaDB
                 try:
