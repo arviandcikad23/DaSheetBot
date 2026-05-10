@@ -161,21 +161,29 @@ if process_btn:
 # FUNGSI CHAT: REST API v1 LANGSUNG
 # ==========================================
 def generate_response(prompt: str, system: str, api_key: str, model: str = "gemini-2.0-flash") -> str:
-    """Memanggil Google Generative Language REST API v1 langsung untuk generate content."""
+    """Memanggil Google Generative Language REST API v1 dengan retry otomatis."""
     url = (
         f"https://generativelanguage.googleapis.com/v1/models/"
         f"{model}:generateContent?key={api_key}"
     )
-    # systemInstruction tidak didukung di v1 endpoint,
-    # sehingga kita gabungkan langsung ke dalam konten pesan.
     full_prompt = f"{system}\n\n{prompt}"
     payload = {
         "contents": [{"role": "user", "parts": [{"text": full_prompt}]}],
         "generationConfig": {"temperature": 0.2}
     }
-    resp = requests.post(url, json=payload, timeout=60)
+    # Retry dengan exponential backoff untuk menangani error 429 (rate limit)
+    max_retries = 4
+    for attempt in range(max_retries):
+        resp = requests.post(url, json=payload, timeout=60)
+        if resp.status_code == 429:
+            wait = 2 ** attempt  # 1, 2, 4, 8 detik
+            time.sleep(wait)
+            continue
+        resp.raise_for_status()
+        return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+    # Jika semua retry gagal
     resp.raise_for_status()
-    return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+    return ""
 
 
 # ==========================================
