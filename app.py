@@ -160,30 +160,53 @@ if process_btn:
 # ==========================================
 # FUNGSI CHAT: REST API v1 LANGSUNG
 # ==========================================
-def generate_response(prompt: str, system: str, api_key: str, model: str = "gemini-2.0-flash") -> str:
-    """Memanggil Google Generative Language REST API v1 dengan retry otomatis."""
-    url = (
-        f"https://generativelanguage.googleapis.com/v1/models/"
-        f"{model}:generateContent?key={api_key}"
-    )
+def generate_response(prompt: str, system: str, api_key: str) -> str:
+    """
+    Memanggil Google Generative Language REST API v1.
+    Mencoba beberapa model secara berurutan jika ada yang gagal.
+    """
+    # Urutan model: dari yang terbaru hingga yang paling stabil
+    # Urutan: flash-lite punya rate limit 30 RPM (lebih tinggi), flash 15 RPM
+    models_to_try = [
+        "gemini-2.0-flash-lite",
+        "gemini-2.0-flash",
+        "gemini-2.5-flash-lite",
+    ]
     full_prompt = f"{system}\n\n{prompt}"
     payload = {
         "contents": [{"role": "user", "parts": [{"text": full_prompt}]}],
         "generationConfig": {"temperature": 0.2}
     }
-    # Retry dengan exponential backoff untuk menangani error 429 (rate limit)
-    max_retries = 4
-    for attempt in range(max_retries):
-        resp = requests.post(url, json=payload, timeout=60)
-        if resp.status_code == 429:
-            wait = 2 ** attempt  # 1, 2, 4, 8 detik
-            time.sleep(wait)
-            continue
-        resp.raise_for_status()
-        return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
-    # Jika semua retry gagal
-    resp.raise_for_status()
-    return ""
+
+    last_error = ""
+    for model in models_to_try:
+        url = (
+            f"https://generativelanguage.googleapis.com/v1/models/"
+            f"{model}:generateContent?key={api_key}"
+        )
+        # Retry 3x dengan backoff untuk rate limit
+        for attempt in range(3):
+            resp = requests.post(url, json=payload, timeout=60)
+            if resp.status_code == 200:
+                return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+            elif resp.status_code == 429:
+                wait = 3 * (attempt + 1)  # 3, 6, 9 detik
+                time.sleep(wait)
+                last_error = f"429 Rate limit pada model `{model}`"
+                continue
+            else:
+                # Error lain (404, 400, dll) — coba model berikutnya
+                try:
+                    err_msg = resp.json().get("error", {}).get("message", resp.text)
+                except Exception:
+                    err_msg = resp.text
+                last_error = f"Model `{model}` error {resp.status_code}: {err_msg}"
+                break  # Keluar dari retry, coba model berikutnya
+
+    raise Exception(
+        f"Semua model gagal. Error terakhir: {last_error}\n\n"
+        "Pastikan API Key valid dan memiliki akses ke Gemini API."
+    )
 
 
 # ==========================================
