@@ -1,6 +1,7 @@
 """
 DaSheet_BOT by Gemini & Exa AI
-dibuat untuk memudahkan analisis dokumen teknis 
+Dikembangkan oleh: Arviandcikad
+Aplikasi ini dibuat untuk memudahkan analisis dokumen teknis 
 (seperti datasheet elektronik) menggunakan AI.
 """
 
@@ -320,6 +321,10 @@ def tampilkan_sidebar():
         if st.button(":material/search: Cari Padanan (Equivalent)"):
             st.session_state.pesan_chat.append({"role": "user", "content": "Berdasarkan spesifikasi ini, cari informasi internet tentang komponen pengganti (equivalent) yang serupa."})
             st.rerun()
+
+        # Tanda Tangan Pengembang
+        st.markdown("---")
+        st.markdown("<p style='text-align: center; font-size: 0.8em; color: gray;'>© 2026 Developed by Arviandcikad</p>", unsafe_allow_html=True)
                 
     return gemini_key, exa_key, gunakan_internet
 
