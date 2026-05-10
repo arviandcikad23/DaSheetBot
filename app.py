@@ -293,6 +293,16 @@ def tampilkan_layar_utama(gemini_key, exa_key, gunakan_internet):
 
     # ---------------- TAB PERCAKAPAN ----------------
     with tab_percakapan:
+        # Menempatkan logo di tengah atas agar tidak mengganggu
+        kolom_kiri, kolom_tengah, kolom_kanan = st.columns([3, 2, 3])
+        with kolom_tengah:
+            try:
+                st.image("dashetbot2.png", use_container_width=True)
+            except:
+                pass # Abaikan jika gambar belum diunggah
+        
+        st.markdown("<br>", unsafe_allow_html=True) # Memberi jarak kosong sedikit
+        
         # Menampilkan riwayat chat sebelumnya
         for pesan in st.session_state.pesan_chat:
             avatar_ikon = "dashetbot 32X32.ico" if pesan["role"] == "assistant" else None
