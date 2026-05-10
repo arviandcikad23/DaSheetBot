@@ -18,7 +18,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.messages import HumanMessage, AIMessage
-import google.genai as genai
 
 # ==========================================
 # KONFIGURASI HALAMAN
@@ -159,6 +158,25 @@ if process_btn:
 
 
 # ==========================================
+# FUNGSI CHAT: REST API v1 LANGSUNG
+# ==========================================
+def generate_response(prompt: str, system: str, api_key: str, model: str = "gemini-1.5-flash") -> str:
+    """Memanggil Google Generative Language REST API v1 langsung untuk generate content."""
+    url = (
+        f"https://generativelanguage.googleapis.com/v1/models/"
+        f"{model}:generateContent?key={api_key}"
+    )
+    payload = {
+        "system_instruction": {"parts": [{"text": system}]},
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.2}
+    }
+    resp = requests.post(url, json=payload, timeout=60)
+    resp.raise_for_status()
+    return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+
+
+# ==========================================
 # CHAT INTERFACE
 # ==========================================
 for msg in st.session_state.messages:
@@ -175,6 +193,7 @@ if prompt := st.chat_input("Tanyakan sesuatu tentang dokumen yang diunggah..."):
     else:
         with st.chat_message("assistant"):
             with st.spinner("Sedang berpikir..."):
+
                 # Cari konteks dari dokumen jika ada
                 context = ""
                 if st.session_state.vector_store and st.session_state.vector_store.texts:
@@ -201,21 +220,16 @@ if prompt := st.chat_input("Tanyakan sesuatu tentang dokumen yang diunggah..."):
                     )
                 else:
                     user_message = (
-                        f"(Tidak ada dokumen yang diunggah atau tidak ditemukan konteks yang relevan.)\n\n"
+                        f"(Tidak ada dokumen yang diunggah atau tidak ditemukan konteks relevan.)\n\n"
                         f"Pertanyaan: {prompt}"
                     )
 
                 try:
-                    client = genai.Client(api_key=api_key_clean)
-                    response = client.models.generate_content(
-                        model="gemini-1.5-flash",
-                        contents=user_message,
-                        config=genai.types.GenerateContentConfig(
-                            system_instruction=system_instruction,
-                            temperature=0.2,
-                        )
+                    final_answer = generate_response(
+                        prompt=user_message,
+                        system=system_instruction,
+                        api_key=api_key_clean
                     )
-                    final_answer = response.text
                     st.markdown(final_answer)
                     st.session_state.messages.append({"role": "assistant", "content": final_answer})
 

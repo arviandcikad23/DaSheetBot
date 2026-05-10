@@ -1,6 +1,5 @@
 setuptools
 streamlit
-google-genai
 pypdf
 faiss-cpu
 langchain-core
