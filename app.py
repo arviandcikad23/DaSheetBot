@@ -55,7 +55,7 @@ os.environ["GOOGLE_API_KEY"] = api_key_clean
 # EMBEDDING: REST API v1 LANGSUNG (tanpa SDK wrapper)
 # ==========================================
 def get_embedding(text: str, api_key: str, model: str = "text-embedding-004") -> list:
-    """Memanggil Google Generative Language REST API v1 secara langsung untuk embedding."""
+    """Memanggil Google Generative Language REST API v1 untuk embedding, dengan retry."""
     url = (
         f"https://generativelanguage.googleapis.com/v1/models/"
         f"{model}:embedContent?key={api_key}"
@@ -64,9 +64,20 @@ def get_embedding(text: str, api_key: str, model: str = "text-embedding-004") ->
         "model": f"models/{model}",
         "content": {"parts": [{"text": text}]}
     }
-    resp = requests.post(url, json=payload, timeout=30)
-    resp.raise_for_status()
-    return resp.json()["embedding"]["values"]
+    for attempt in range(3):
+        resp = requests.post(url, json=payload, timeout=30)
+        if resp.status_code == 200:
+            return resp.json()["embedding"]["values"]
+        elif resp.status_code == 429:
+            time.sleep(3 * (attempt + 1))
+            continue
+        else:
+            try:
+                err = resp.json().get("error", {}).get("message", resp.text)
+            except Exception:
+                err = resp.text
+            raise Exception(f"Embedding error {resp.status_code}: {err}")
+    raise Exception("Embedding gagal setelah 3 percobaan (rate limit 429).")
 
 
 # ==========================================
@@ -212,6 +223,14 @@ def generate_response(prompt: str, system: str, api_key: str) -> str:
 # ==========================================
 # CHAT INTERFACE
 # ==========================================
+
+# Status dokumen
+if st.session_state.vector_store and st.session_state.vector_store.texts:
+    n = len(st.session_state.vector_store.texts)
+    st.info(f"📚 **{n} bagian dokumen** siap digunakan. Silakan ajukan pertanyaan!")
+else:
+    st.warning("⚠️ Belum ada dokumen yang diproses. Unggah PDF dan klik **Proses Dokumen** di sidebar terlebih dahulu.")
+
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
@@ -236,7 +255,7 @@ if prompt := st.chat_input("Tanyakan sesuatu tentang dokumen yang diunggah..."):
                         if relevant_chunks:
                             context = "\n\n---\n\n".join(relevant_chunks)
                     except Exception as e:
-                        st.warning(f"Gagal mencari konteks: {e}")
+                        st.error(f"❌ Gagal mencari konteks dokumen: {e}")
 
                 # Bangun pesan ke Gemini
                 system_instruction = (
