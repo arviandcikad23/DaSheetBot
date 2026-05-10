@@ -12,7 +12,7 @@ import glob
 from pypdf import PdfReader
 
 # 1. KONFIGURASI HALAMAN
-st.set_page_config(page_title="DaSheet_BOT Pro", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="DaSheet_BOT Pro", page_icon="dashetbot24x24.ico", layout="wide")
 
 # Custom CSS
 st.markdown("""
@@ -105,7 +105,7 @@ def request_gemini(prompt, system, api_key):
 
 # 7. SIDEBAR
 with st.sidebar:
-    st.title("DaSheet_BOT")
+    st.title("DaSheet_BOT 🤖")
     st.caption("AI Assistant with Auto-Database")
     st.markdown("---")
     
