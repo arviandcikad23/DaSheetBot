@@ -1,0 +1,8 @@
+streamlit
+langchain
+langchain-google-genai
+langchain-chroma
+langgraph
+pypdf
+langchain-exa
+exa_py
