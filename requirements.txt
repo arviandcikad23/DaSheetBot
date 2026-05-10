@@ -1,9 +1,4 @@
 setuptools
 streamlit
 pypdf
-faiss-cpu
-langchain-core
-langchain-text-splitters
-langchain-community
-langgraph
-langchain
+requests
