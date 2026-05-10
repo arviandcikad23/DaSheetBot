@@ -42,30 +42,27 @@ def ekstrak_teks_pdf(file_path, nama_file):
     except Exception as e:
         return f"\n[Gagal membaca {nama_file}: {e}]\n"
 
-# 4. OTOMATIS MUAT DOKUMEN DARI FOLDER 'database_pdf'
-# Menggunakan path absolut agar aman di server mana pun
+# 4. OTOMATIS MUAT DOKUMEN DARI ROOT (HALAMAN UTAMA)
+# Mencari semua file .pdf yang Anda upload langsung ke GitHub
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FOLDER_DATABASE = os.path.join(BASE_DIR, "database_pdf")
 
 if not st.session_state.is_data_loaded:
-    if os.path.exists(FOLDER_DATABASE):
-        # Mencari file .pdf maupun .PDF
-        files = glob.glob(os.path.join(FOLDER_DATABASE, "*.pdf")) + \
-                glob.glob(os.path.join(FOLDER_DATABASE, "*.PDF"))
-        
-        if files:
-            with st.spinner(f"Memuat {len(files)} dokumen dari database..."):
-                gabungan = ""
-                nama_list = []
-                for f_path in files:
-                    f_name = os.path.basename(f_path)
+    # Cari file .pdf dan .PDF langsung di folder utama
+    files = glob.glob(os.path.join(BASE_DIR, "*.pdf")) + \
+            glob.glob(os.path.join(BASE_DIR, "*.PDF"))
+    
+    if files:
+        with st.spinner(f"Mendeteksi {len(files)} dokumen di repositori..."):
+            gabungan = ""
+            nama_list = []
+            for f_path in files:
+                f_name = os.path.basename(f_path)
+                # Hindari memproses file sementara jika ada
+                if not f_name.startswith("~"):
                     gabungan += ekstrak_teks_pdf(f_path, f_name)
                     nama_list.append(f_name)
-                st.session_state.teks_dokumen = gabungan
-                st.session_state.nama_file = nama_list
-    else:
-        # Jika folder tidak ditemukan, beri info di sidebar (hanya saat pertama kali)
-        st.sidebar.info(f"Info: Folder '{os.path.basename(FOLDER_DATABASE)}' tidak ditemukan di root proyek.")
+            st.session_state.teks_dokumen = gabungan
+            st.session_state.nama_file = nama_list
     
     st.session_state.is_data_loaded = True
 
