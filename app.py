@@ -18,7 +18,7 @@ from pypdf import PdfReader
 # ==========================================
 def setup_halaman():
     st.set_page_config(
-        page_title="DaSheet_BOT Pro", 
+        page_title="DaSheetBot", 
         page_icon="dashetbot24x24.ico", 
         layout="wide"
     )
@@ -305,23 +305,6 @@ def tampilkan_sidebar():
                 st.session_state.data_dokumen = {}
                 st.rerun()
 
-        # Fitur Baru: Analisis Cepat (Quick Actions)
-        st.markdown("---")
-        st.subheader(":material/bolt: Analisis Cepat")
-        st.caption("Gunakan tombol di bawah untuk perintah cepat:")
-        
-        if st.button(":material/terminal: Ringkasan Pinout"):
-            st.session_state.pesan_chat.append({"role": "user", "content": "Berikan ringkasan konfigurasi pin (pinout) dan fungsi masing-masing dari dokumen ini."})
-            st.rerun()
-            
-        if st.button(":material/security: Cek Batas Aman (Safety)"):
-            st.session_state.pesan_chat.append({"role": "user", "content": "Tampilkan tabel Absolute Maximum Ratings (Tegangan, Arus, Suhu) dan berikan peringatan keselamatannya."})
-            st.rerun()
-            
-        if st.button(":material/search: Cari Padanan (Equivalent)"):
-            st.session_state.pesan_chat.append({"role": "user", "content": "Berdasarkan spesifikasi ini, cari informasi internet tentang komponen pengganti (equivalent) yang serupa."})
-            st.rerun()
-
         # Tanda Tangan Pengembang
         st.markdown("---")
         st.markdown("<p style='text-align: center; font-size: 0.8em; color: gray;'>© 2026 Developed by Arviandcikad</p>", unsafe_allow_html=True)
@@ -359,7 +342,7 @@ def tampilkan_layar_utama(gemini_key, exa_key, gunakan_internet):
                     
                     # Bangun instruksi dan konteks untuk AI
                     instruksi = (
-                        "Anda adalah DaSheet_BOT, asisten ahli teknik elektronika dan sistem hardware. "
+                        "Anda adalah DaSheetBot, asisten ahli teknik elektronika dan sistem hardware. "
                         "Tugas Anda: membantu user menganalisis datasheet secara akurat dan profesional. "
                         "ATURAN JAWABAN:\n"
                         "1. Jika user bertanya tentang komponen, selalu sertakan 'Pinout Summary' dan 'Absolute Maximum Ratings' jika data tersedia.\n"
