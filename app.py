@@ -43,13 +43,18 @@ def ekstrak_teks_pdf(file_path, nama_file):
         return f"\n[Gagal membaca {nama_file}: {e}]\n"
 
 # 4. OTOMATIS MUAT DOKUMEN DARI FOLDER 'database_pdf'
-FOLDER_DATABASE = "database_pdf"
+# Menggunakan path absolut agar aman di server mana pun
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FOLDER_DATABASE = os.path.join(BASE_DIR, "database_pdf")
 
 if not st.session_state.is_data_loaded:
     if os.path.exists(FOLDER_DATABASE):
-        files = glob.glob(os.path.join(FOLDER_DATABASE, "*.pdf"))
+        # Mencari file .pdf maupun .PDF
+        files = glob.glob(os.path.join(FOLDER_DATABASE, "*.pdf")) + \
+                glob.glob(os.path.join(FOLDER_DATABASE, "*.PDF"))
+        
         if files:
-            with st.spinner(f"Memuat {len(files)} dokumen bawaan..."):
+            with st.spinner(f"Memuat {len(files)} dokumen dari database..."):
                 gabungan = ""
                 nama_list = []
                 for f_path in files:
@@ -58,6 +63,10 @@ if not st.session_state.is_data_loaded:
                     nama_list.append(f_name)
                 st.session_state.teks_dokumen = gabungan
                 st.session_state.nama_file = nama_list
+    else:
+        # Jika folder tidak ditemukan, beri info di sidebar (hanya saat pertama kali)
+        st.sidebar.info(f"Info: Folder '{os.path.basename(FOLDER_DATABASE)}' tidak ditemukan di root proyek.")
+    
     st.session_state.is_data_loaded = True
 
 # 5. FUNGSI PENCARIAN EXA AI
