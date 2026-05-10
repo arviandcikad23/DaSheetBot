@@ -17,6 +17,17 @@ st.set_page_config(page_title="DaSheet_BOT Pro", page_icon="dashetbot24x24.ico",
 # Custom CSS
 st.markdown("""
     <style>
+    /* Warna latar belakang utama (Putih Tulang) */
+    .stApp {
+        background-color: #F9F6EE;
+    }
+    
+    /* Warna garis pemisah (Cyan) */
+    hr {
+        border-top: 2px solid #00E5FF !important;
+    }
+    
+    /* Desain Tombol */
     .stButton>button { width: 100%; border-radius: 5px; background-color: #007bff; color: white; }
     </style>
     """, unsafe_allow_html=True)
@@ -140,7 +151,7 @@ with st.sidebar:
         st.subheader("Database Aktif")
         st.metric("Total Dokumen", len(st.session_state.nama_file))
         with st.expander("Daftar File", expanded=False):
-            for f in st.session_state.nama_file: st.caption(f"📄 {f}")
+            for f in st.session_state.nama_file: st.caption(f":material/description: {f}")
         if st.button("Kosongkan Database"):
             st.session_state.teks_dokumen = ""
             st.session_state.nama_file = []
@@ -148,7 +159,7 @@ with st.sidebar:
             st.rerun()
 
 # 8. MAIN INTERFACE
-tab_chat, tab_preview = st.tabs(["💬 Chat dengan AI", "📄 Preview Data"])
+tab_chat, tab_preview = st.tabs([":material/forum: AI Chat Analysis", ":material/dataset: Document Explorer"])
 
 with tab_chat:
     for m in st.session_state.messages:
@@ -170,7 +181,7 @@ with tab_chat:
 
 with tab_preview:
     if st.session_state.dokumen_dict:
-        st.subheader("📚 Daftar Dokumen Aktif")
+        st.subheader(":material/folder_open: Daftar Dokumen Aktif")
         st.write("Klik pada nama dokumen untuk melihat seluruh teks yang dibaca oleh AI.")
         
         for f_name, text in st.session_state.dokumen_dict.items():
@@ -178,7 +189,7 @@ with tab_preview:
             snippet = text.replace("\n", " ")[:200] + "..."
             
             # Membuat kotak (expander) yang bisa diklik
-            with st.expander(f"📄 {f_name}"):
+            with st.expander(f":material/description: {f_name}"):
                 st.caption("Ringkasan isi:")
                 st.write(snippet)
                 st.markdown("---")
