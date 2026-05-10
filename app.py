@@ -3,7 +3,8 @@ import tempfile
 import os
 import time
 import shutil
-import google.generativeai as genai
+import google.genai as genai
+from google.genai import types as genai_types
 from langchain_core.embeddings import Embeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -15,27 +16,26 @@ from langchain_chroma import Chroma
 # Menggunakan Google GenAI SDK langsung yang memanggil endpoint /v1
 # ==========================================
 class DirectGoogleEmbeddings(Embeddings):
-    def __init__(self, model_name: str = "models/text-embedding-004"):
+    def __init__(self, model_name: str = "models/text-embedding-004", api_key: str = ""):
         self.model_name = model_name
+        self.client = genai.Client(api_key=api_key)
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         results = []
         for text in texts:
-            result = genai.embed_content(
+            response = self.client.models.embed_content(
                 model=self.model_name,
-                content=text,
-                task_type="retrieval_document"
+                contents=text,
             )
-            results.append(result["embedding"])
+            results.append(response.embeddings[0].values)
         return results
 
     def embed_query(self, text: str) -> list[float]:
-        result = genai.embed_content(
+        response = self.client.models.embed_content(
             model=self.model_name,
-            content=text,
-            task_type="retrieval_query"
+            contents=text,
         )
-        return result["embedding"]
+        return response.embeddings[0].values
 try:
     from langchain.tools.retriever import create_retriever_tool
 except (ImportError, ModuleNotFoundError):
@@ -150,8 +150,8 @@ if process_btn:
                     shutil.rmtree(persist_dir, ignore_errors=True)
                     time.sleep(1)
                 
-                # Embedding menggunakan SDK langsung (endpoint /v1, bukan /v1beta)
-                genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+                # Embedding menggunakan SDK baru google-genai (kompatibel Python 3.12+)
+                api_key = os.environ["GOOGLE_API_KEY"]
                 embedding_models = [
                     "models/text-embedding-004",
                     "models/gemini-embedding-exp-03-07",
@@ -159,7 +159,7 @@ if process_btn:
                 embeddings = None
                 for model_name in embedding_models:
                     try:
-                        emb = DirectGoogleEmbeddings(model_name=model_name)
+                        emb = DirectGoogleEmbeddings(model_name=model_name, api_key=api_key)
                         emb.embed_query("test")
                         embeddings = emb
                         st.sidebar.info(f"✅ Embedding aktif: `{model_name}`")
