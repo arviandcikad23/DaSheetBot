@@ -26,6 +26,11 @@ def setup_halaman():
     # agar sesuai dengan identitas visual aplikasi (Putih Tulang & Cyan Kebiruan)
     css_kustom = """
     <style>
+    /* Membesarkan Semua Tulisan (+2px / ~18px) */
+    p, div[data-testid="stMarkdownContainer"], span[data-testid="stText"], label, button, input, textarea {
+        font-size: 1.15rem !important;
+    }
+    
     /* Latar Belakang (Putih Tulang Terang) */
     .stApp, [data-testid="stSidebar"], [data-testid="stHeader"] {
         background-color: #FDFCF4 !important;
@@ -81,8 +86,20 @@ def setup_halaman():
         color: #00BCD4 !important;
         font-weight: bold;
     }
+    
+    /* Garis animasi yang bergeser saat pindah tab */
+    div[data-baseweb="tab-highlight"] {
+        background-color: #00BCD4 !important;
+    }
+    
+    /* Garis bawah tab bawaan */
     div[data-testid="stTabs"] div[data-baseweb="tab-list"] div[aria-selected="true"] {
         border-bottom-color: #00BCD4 !important;
+    }
+
+    /* Menghilangkan garis kotak (outline) merah saat elemen diklik */
+    *:focus {
+        outline-color: #00BCD4 !important;
     }
 
     /* Checkbox Transparan */
@@ -229,7 +246,7 @@ def tanya_gemini(pertanyaan, instruksi_sistem, kunci_api_gemini):
 def tampilkan_sidebar():
     with st.sidebar:
         st.image("DasheetBOT.png", use_container_width=True)
-        st.caption("Asisten Pintar Analisis Datasheet")
+        st.markdown("<p style='text-align: center; color: gray; font-size: 0.9em; margin-top: -10px;'>Asisten Pintar Analisis Datasheet</p>", unsafe_allow_html=True)
         st.markdown("---")
         
         # Pengaturan Kunci API
@@ -293,16 +310,6 @@ def tampilkan_layar_utama(gemini_key, exa_key, gunakan_internet):
 
     # ---------------- TAB PERCAKAPAN ----------------
     with tab_percakapan:
-        # Menempatkan logo di tengah atas area chat
-        kolom_kiri, kolom_tengah, kolom_kanan = st.columns([3, 2, 3])
-        with kolom_tengah:
-            try:
-                st.image("DasheetBOT2.png", use_container_width=True)
-            except:
-                pass # Abaikan jika gambar belum diunggah
-        
-        st.markdown("<br>", unsafe_allow_html=True) # Memberi jarak kosong
-        
         # Menampilkan riwayat chat sebelumnya
         for pesan in st.session_state.pesan_chat:
             avatar_ikon = "dashetbot 32X32.ico" if pesan["role"] == "assistant" else None
