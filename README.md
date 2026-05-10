@@ -1,7 +1,7 @@
-# DaSheet_BOT Pro
+# DaSheetBOT
 **Asisten Pintar Analisis Datasheet & Karakteristik Hardware**
 
-DaSheet_BOT Pro adalah aplikasi AI berbasis *Long-Context* yang dirancang khusus untuk membantu mahasiswa dan insinyur teknik dalam menganalisis dokumen datasheet komponen elektronik secara cepat dan akurat.
+DaSheetBOT adalah aplikasi AI berbasis *Long-Context* yang dirancang khusus untuk membantu mahasiswa dan insinyur teknik dalam menganalisis dokumen datasheet komponen elektronik secara cepat dan akurat.
 
 ---
 
@@ -16,7 +16,7 @@ Untuk mempermudah pemeriksaan kode, berikut adalah file-file inti dari proyek in
 
 ##  Link Aplikasi
 Aplikasi dapat langsung diakses melalui tautan berikut:  
- **[Buka DaSheet_BOT Pro](https://dasheetbot-8jint3j2h55bsn3u9hfbvm.streamlit.app)**  
+ **[Buka DaSheetBOT](https://dasheetbot-8jint3j2h55bsn3u9hfbvm.streamlit.app)**  
 *(Pastikan Anda telah menyiapkan Google Gemini API Key untuk memulai percakapan)*
 
 ---
@@ -43,7 +43,7 @@ Aplikasi dapat langsung diakses melalui tautan berikut:
 ---
 
 ##  Contoh Pertanyaan untuk Dicoba
-Anda bisa menguji kecerdasan DaSheet_BOT Pro dengan mencoba beberapa perintah berikut:
+Anda bisa menguji kecerdasan DaSheetBOT dengan mencoba beberapa perintah berikut:
 1.  **Perbandingan Komponen**: *"Bandingkan spesifikasi teknis antara XL4005 dan XL4015 dalam bentuk tabel. Mana yang lebih efisien untuk arus 4A?"*
 2.  **Analisis Pinout**: *"Sebutkan konfigurasi pin untuk komponen BC547 dan jelaskan fungsi masing-masing kakinya."*
 3.  **Cek Keamanan**: *"Berapa suhu operasional maksimal dan tegangan input tertinggi untuk XL4016 agar tidak terbakar?"*
