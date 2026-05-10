@@ -121,14 +121,13 @@ if process_btn:
                     shutil.rmtree(persist_dir, ignore_errors=True)
                     time.sleep(1)
                 
-                # Embedding Fallback Mechanism
                 try:
                     embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
-                    # Try to embed a dummy text to verify if the model works
+                    # Test embedding
                     embeddings.embed_query("test_connection")
                 except Exception as e:
-                    st.sidebar.warning("Fallback embeddings aktif: Menggunakan models/embedding-001")
-                    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                    st.sidebar.error(f"Error pada model text-embedding-004: {e}")
+                    raise e
                 
                 # Storage to ChromaDB
                 try:
