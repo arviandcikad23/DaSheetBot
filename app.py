@@ -167,7 +167,7 @@ def generate_response(prompt: str, system: str, api_key: str, model: str = "gemi
         f"{model}:generateContent?key={api_key}"
     )
     payload = {
-        "system_instruction": {"parts": [{"text": system}]},
+        "systemInstruction": {"parts": [{"text": system}]},
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.2}
     }
