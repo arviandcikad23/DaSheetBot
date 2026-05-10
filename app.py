@@ -39,7 +39,7 @@ st.markdown("""
         color: white;
     }
     </style>
-    """, unsafe_allow_stdio=True)
+    """, unsafe_allow_html=True)
 
 # 2. INISIALISASI STATE
 if "messages" not in st.session_state:
