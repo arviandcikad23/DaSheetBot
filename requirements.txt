@@ -8,3 +8,4 @@ langgraph
 pypdf
 langchain-exa
 exa_py
+protobuf==3.20.3
