@@ -303,6 +303,23 @@ def tampilkan_sidebar():
                 st.session_state.daftar_nama_file = []
                 st.session_state.data_dokumen = {}
                 st.rerun()
+
+        # Fitur Baru: Analisis Cepat (Quick Actions)
+        st.markdown("---")
+        st.subheader(":material/bolt: Analisis Cepat")
+        st.caption("Gunakan tombol di bawah untuk perintah cepat:")
+        
+        if st.button(":material/terminal: Ringkasan Pinout"):
+            st.session_state.pesan_chat.append({"role": "user", "content": "Berikan ringkasan konfigurasi pin (pinout) dan fungsi masing-masing dari dokumen ini."})
+            st.rerun()
+            
+        if st.button(":material/security: Cek Batas Aman (Safety)"):
+            st.session_state.pesan_chat.append({"role": "user", "content": "Tampilkan tabel Absolute Maximum Ratings (Tegangan, Arus, Suhu) dan berikan peringatan keselamatannya."})
+            st.rerun()
+            
+        if st.button(":material/search: Cari Padanan (Equivalent)"):
+            st.session_state.pesan_chat.append({"role": "user", "content": "Berdasarkan spesifikasi ini, cari informasi internet tentang komponen pengganti (equivalent) yang serupa."})
+            st.rerun()
                 
     return gemini_key, exa_key, gunakan_internet
 
@@ -337,9 +354,13 @@ def tampilkan_layar_utama(gemini_key, exa_key, gunakan_internet):
                     
                     # Bangun instruksi dan konteks untuk AI
                     instruksi = (
-                        "Anda adalah DaSheet_BOT, asisten ahli teknik elektronika. "
-                        "Gunakan data dari dokumen yang disediakan untuk menjawab. "
-                        "Jika tidak ada di dokumen, rujuk pada info internet jika tersedia."
+                        "Anda adalah DaSheet_BOT, asisten ahli teknik elektronika dan sistem hardware. "
+                        "Tugas Anda: membantu user menganalisis datasheet secara akurat dan profesional. "
+                        "ATURAN JAWABAN:\n"
+                        "1. Jika user bertanya tentang komponen, selalu sertakan 'Pinout Summary' dan 'Absolute Maximum Ratings' jika data tersedia.\n"
+                        "2. Gunakan TABEL untuk membandingkan spesifikasi atau menampilkan data teknis agar mudah dibaca.\n"
+                        "3. Jika data di dokumen kurang lengkap, gunakan info INTERNET untuk memberikan konteks tambahan atau mencari padanan komponen.\n"
+                        "4. Berikan saran aplikasi (Typical Application) yang relevan untuk hardware tersebut."
                     )
                     konteks_akhir = (
                         f"DATA DOKUMEN:\n{st.session_state.teks_gabungan}\n\n"
