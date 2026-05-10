@@ -28,6 +28,8 @@ if "teks_dokumen" not in st.session_state:
     st.session_state.teks_dokumen = ""
 if "nama_file" not in st.session_state:
     st.session_state.nama_file = []
+if "dokumen_dict" not in st.session_state:
+    st.session_state.dokumen_dict = {}
 if "is_data_loaded" not in st.session_state:
     st.session_state.is_data_loaded = False
 
@@ -59,8 +61,10 @@ if not st.session_state.is_data_loaded:
                 f_name = os.path.basename(f_path)
                 # Hindari memproses file sementara jika ada
                 if not f_name.startswith("~"):
-                    gabungan += ekstrak_teks_pdf(f_path, f_name)
+                    teks_ekstrak = ekstrak_teks_pdf(f_path, f_name)
+                    gabungan += teks_ekstrak
                     nama_list.append(f_name)
+                    st.session_state.dokumen_dict[f_name] = teks_ekstrak
             st.session_state.teks_dokumen = gabungan
             st.session_state.nama_file = nama_list
     
@@ -124,8 +128,10 @@ with st.sidebar:
                 for file in files_upload:
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
                         tmp.write(file.getvalue()); p = tmp.name
-                    st.session_state.teks_dokumen += ekstrak_teks_pdf(p, file.name)
+                    teks_ekstrak = ekstrak_teks_pdf(p, file.name)
+                    st.session_state.teks_dokumen += teks_ekstrak
                     st.session_state.nama_file.append(file.name)
+                    st.session_state.dokumen_dict[file.name] = teks_ekstrak
                     os.remove(p)
                 st.rerun()
 
@@ -136,7 +142,10 @@ with st.sidebar:
         with st.expander("Daftar File", expanded=False):
             for f in st.session_state.nama_file: st.caption(f"📄 {f}")
         if st.button("Kosongkan Database"):
-            st.session_state.teks_dokumen = ""; st.session_state.nama_file = []; st.rerun()
+            st.session_state.teks_dokumen = ""
+            st.session_state.nama_file = []
+            st.session_state.dokumen_dict = {}
+            st.rerun()
 
 # 8. MAIN INTERFACE
 tab_chat, tab_preview = st.tabs(["💬 Chat dengan AI", "📄 Preview Data"])
@@ -160,6 +169,19 @@ with tab_chat:
                 except Exception as e: st.error(f"Error: {e}")
 
 with tab_preview:
-    if st.session_state.teks_dokumen:
-        st.text_area("Seluruh Data Dokumen", st.session_state.teks_dokumen, height=500)
-    else: st.write("Database kosong.")
+    if st.session_state.dokumen_dict:
+        st.subheader("📚 Daftar Dokumen Aktif")
+        st.write("Klik pada nama dokumen untuk melihat seluruh teks yang dibaca oleh AI.")
+        
+        for f_name, text in st.session_state.dokumen_dict.items():
+            # Tampilkan sedikit ringkasan teks sebagai preview (200 karakter pertama)
+            snippet = text.replace("\n", " ")[:200] + "..."
+            
+            # Membuat kotak (expander) yang bisa diklik
+            with st.expander(f"📄 {f_name}"):
+                st.caption("Ringkasan isi:")
+                st.write(snippet)
+                st.markdown("---")
+                st.text_area("Teks Lengkap", text, height=300, key=f"preview_{f_name}")
+    else:
+        st.write("Belum ada dokumen yang dimuat.")
