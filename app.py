@@ -1,6 +1,6 @@
 """
 DaSheet_BOT Professional - Powered by Gemini & Exa AI
-UI yang lebih bersih dengan Metrik di Sidebar.
+Fitur: Auto-Load Dokumen dari folder 'database_pdf'
 """
 
 import streamlit as st
@@ -8,6 +8,7 @@ import tempfile
 import os
 import requests
 import time
+import glob
 from pypdf import PdfReader
 
 # 1. KONFIGURASI HALAMAN
@@ -27,143 +28,126 @@ if "teks_dokumen" not in st.session_state:
     st.session_state.teks_dokumen = ""
 if "nama_file" not in st.session_state:
     st.session_state.nama_file = []
+if "is_data_loaded" not in st.session_state:
+    st.session_state.is_data_loaded = False
 
-# 3. FUNGSI PENCARIAN EXA AI
+# 3. FUNGSI UNTUK MEMBACA PDF
+def ekstrak_teks_pdf(file_path, nama_file):
+    try:
+        reader = PdfReader(file_path)
+        teks = f"\n[DOKUMEN: {nama_file}]\n"
+        for page in reader.pages:
+            teks += (page.extract_text() or "") + "\n"
+        return teks
+    except Exception as e:
+        return f"\n[Gagal membaca {nama_file}: {e}]\n"
+
+# 4. OTOMATIS MUAT DOKUMEN DARI FOLDER 'database_pdf'
+FOLDER_DATABASE = "database_pdf"
+
+if not st.session_state.is_data_loaded:
+    if os.path.exists(FOLDER_DATABASE):
+        files = glob.glob(os.path.join(FOLDER_DATABASE, "*.pdf"))
+        if files:
+            with st.spinner(f"Memuat {len(files)} dokumen bawaan..."):
+                gabungan = ""
+                nama_list = []
+                for f_path in files:
+                    f_name = os.path.basename(f_path)
+                    gabungan += ekstrak_teks_pdf(f_path, f_name)
+                    nama_list.append(f_name)
+                st.session_state.teks_dokumen = gabungan
+                st.session_state.nama_file = nama_list
+    st.session_state.is_data_loaded = True
+
+# 5. FUNGSI PENCARIAN EXA AI
 def cari_internet_exa(query, exa_key):
-    if not exa_key:
-        return "Info: Exa API Key kosong, pencarian internet dilewati."
-    
+    if not exa_key: return ""
     url = "https://api.exa.ai/search"
     headers = {"accept": "application/json", "content-type": "application/json", "x-api-key": exa_key}
-    payload = {
-        "query": query,
-        "useAutoprompt": True,
-        "numResults": 3,
-        "contents": {"text": {"maxCharacters": 1000}}
-    }
+    payload = {"query": query, "useAutoprompt": True, "numResults": 3, "contents": {"text": {"maxCharacters": 1000}}}
     try:
         response = requests.post(url, json=payload, headers=headers, timeout=15)
         if response.status_code == 200:
             results = response.json().get("results", [])
-            if not results: return "Info: Tidak ditemukan hasil relevan di internet."
-            teks_hasil = "\n--- HASIL PENCARIAN INTERNET (EXA AI) ---\n"
+            teks_hasil = "\n--- DATA TAMBAHAN DARI INTERNET ---\n"
             for res in results:
-                teks_hasil += f"\nSumber: {res.get('url')}\nJudul: {res.get('title')}\nKonten: {res.get('text')[:500]}...\n"
+                teks_hasil += f"\nSumber: {res.get('url')}\nKonten: {res.get('text')[:500]}...\n"
             return teks_hasil
-        else:
-            return f"Info: Exa API Error {response.status_code} - {response.text}"
-    except Exception as e:
-        return f"Info: Gagal terhubung ke Exa AI: {str(e)}"
+        return ""
+    except: return ""
 
-# 4. FUNGSI REQUEST GEMINI
+# 6. FUNGSI REQUEST GEMINI
 def request_gemini(prompt, system, api_key):
     models = ["gemini-2.0-flash", "gemini-2.0-flash-lite"]
-    payload = {
-        "contents": [{"role": "user", "parts": [{"text": f"{system}\n\n{prompt}"}]}],
-        "generationConfig": {"temperature": 0.2}
-    }
-    error_asli = ""
+    payload = {"contents": [{"role": "user", "parts": [{"text": f"{system}\n\n{prompt}"}]}], "generationConfig": {"temperature": 0.2}}
+    err_msg = ""
     for m_name in models:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{m_name}:generateContent?key={api_key}"
         try:
-            for attempt in range(2):
-                r = requests.post(url, json=payload, timeout=120)
-                if r.status_code == 200:
-                    return r.json()["candidates"][0]["content"]["parts"][0]["text"]
-                if r.status_code == 429:
-                    time.sleep(8); continue
-                error_asli = r.json().get("error", {}).get("message", r.text)
-                break 
-        except Exception as e:
-            error_asli = str(e); continue
-    return f"Gagal mendapatkan respon. Detail: {error_asli}"
+            r = requests.post(url, json=payload, timeout=120)
+            if r.status_code == 200: return r.json()["candidates"][0]["content"]["parts"][0]["text"]
+            err_msg = r.json().get("error", {}).get("message", r.text)
+        except: continue
+    return f"Gagal merespon. Detail: {err_msg}"
 
-# 5. SIDEBAR
+# 7. SIDEBAR
 with st.sidebar:
     st.title("DaSheet_BOT 🤖")
-    st.caption("Advanced AI Analysis")
+    st.caption("AI Assistant with Auto-Database")
     st.markdown("---")
     
     with st.expander("Konfigurasi API", expanded=True):
         gemini_key = st.text_input("Gemini API Key", type="password")
         exa_key = st.text_input("Exa API Key", type="password")
-        pakai_exa = st.checkbox("Gunakan Pencarian Internet", value=False, help="Hanya gunakan jika Anda sudah memasukkan Exa API Key.")
+        pakai_exa = st.checkbox("Gunakan Pencarian Internet", value=False)
     
     st.markdown("---")
-    st.header("Unggah Dokumen")
-    files_upload = st.file_uploader("Upload PDF", type="pdf", accept_multiple_files=True, label_visibility="collapsed")
+    st.header("Tambah Dokumen")
+    files_upload = st.file_uploader("Upload PDF Tambahan", type="pdf", accept_multiple_files=True, label_visibility="collapsed")
     
-    if st.button("Mulai Proses Dokumen", type="primary"):
-        if not gemini_key:
-            st.error("Masukkan Gemini API Key.")
-        elif not files_upload:
-            st.warning("Pilih file PDF.")
-        else:
-            with st.status("Memproses dokumen...", expanded=True) as status:
-                gabungan_teks = ""; nama_file_list = []
+    if st.button("Proses Dokumen Tambahan", type="primary"):
+        if files_upload:
+            with st.status("Menambah dokumen...", expanded=False):
                 for file in files_upload:
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-                        tmp.write(file.getvalue()); path = tmp.name
-                    reader = PdfReader(path)
-                    t = f"\n[DOKUMEN: {file.name}]\n"
-                    for p in reader.pages: t += (p.extract_text() or "") + "\n"
-                    gabungan_teks += t; nama_file_list.append(file.name); os.remove(path)
-                st.session_state.teks_dokumen = gabungan_teks
-                st.session_state.nama_file = nama_file_list
-                status.update(label="Selesai!", state="complete", expanded=False)
+                        tmp.write(file.getvalue()); p = tmp.name
+                    st.session_state.teks_dokumen += ekstrak_teks_pdf(p, file.name)
+                    st.session_state.nama_file.append(file.name)
+                    os.remove(p)
+                st.rerun()
 
-    # PINDAHKAN METRIK KE SIDEBAR
     if st.session_state.nama_file:
         st.markdown("---")
-        st.subheader("Statistik Dokumen")
+        st.subheader("Database Aktif")
         st.metric("Total Dokumen", len(st.session_state.nama_file))
-        st.metric("Ukuran Teks", f"{len(st.session_state.teks_dokumen):,} char")
-        
         with st.expander("Daftar File", expanded=False):
-            for f in st.session_state.nama_file:
-                st.caption(f"📄 {f}")
-        
-        if st.button("Hapus Semua Dokumen"):
+            for f in st.session_state.nama_file: st.caption(f"📄 {f}")
+        if st.button("Kosongkan Database"):
             st.session_state.teks_dokumen = ""; st.session_state.nama_file = []; st.rerun()
 
-    st.markdown("---")
-    if st.button("Hapus Riwayat Chat"):
-        st.session_state.messages = []; st.rerun()
-
-# 6. MAIN INTERFACE
-tab_chat, tab_preview = st.tabs(["💬 Chat dengan AI", "📄 Preview Teks"])
+# 8. MAIN INTERFACE
+tab_chat, tab_preview = st.tabs(["💬 Chat dengan AI", "📄 Preview Data"])
 
 with tab_chat:
     for m in st.session_state.messages:
         with st.chat_message(m["role"]): st.markdown(m["content"])
 
-    if prompt := st.chat_input("Tanyakan sesuatu tentang datasheet..."):
+    if prompt := st.chat_input("Tanyakan sesuatu..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"): st.markdown(prompt)
 
         with st.chat_message("assistant"):
-            with st.spinner("Sedang menganalisis..."):
-                hasil_web = ""
-                # HANYA JALANKAN EXA JIKA DICENTANG DAN KEY ADA
-                if pakai_exa and exa_key.strip():
-                    with st.status("Mencari di internet via Exa AI...", expanded=False) as s_exa:
-                        hasil_web = cari_internet_exa(prompt, exa_key.strip())
-                        if "Error" in hasil_web:
-                            s_exa.update(label="Gagal mencari di web", state="error")
-                        else:
-                            s_exa.update(label="Pencarian web selesai", state="complete")
-                
-                sys_inst = "Anda adalah DaSheet_BOT. Jawab berdasarkan dokumen PDF yang diberikan. Jika ada data dari web, gunakan untuk melengkapi jawaban."
-                konteks_lengkap = f"DOKUMEN PDF:\n{st.session_state.teks_dokumen}\n\n{hasil_web}\n\nPERTANYAAN: {prompt}"
-                
+            with st.spinner("Menganalisis..."):
+                h_web = cari_internet_exa(prompt, exa_key.strip()) if (pakai_exa and exa_key.strip()) else ""
+                sys = "Anda adalah DaSheet_BOT. Jawab berdasarkan DATA DOKUMEN dan INTERNET yang diberikan."
+                ctx = f"DATA DOKUMEN:\n{st.session_state.teks_dokumen}\n\n{h_web}\n\nPERTANYAAN: {prompt}"
                 try:
-                    res = request_gemini(konteks_lengkap, sys_inst, gemini_key.strip())
-                    st.markdown(res)
-                    st.session_state.messages.append({"role": "assistant", "content": res})
-                except Exception as e:
-                    st.error(f"Terjadi kesalahan: {e}")
+                    res = request_gemini(ctx, sys, gemini_key.strip())
+                    st.markdown(res); st.session_state.messages.append({"role": "assistant", "content": res})
+                except Exception as e: st.error(f"Error: {e}")
 
 with tab_preview:
     if st.session_state.teks_dokumen:
-        st.text_area("Konten yang dibaca AI", st.session_state.teks_dokumen, height=500)
-    else: st.write("Belum ada dokumen.")
+        st.text_area("Seluruh Data Dokumen", st.session_state.teks_dokumen, height=500)
+    else: st.write("Database kosong.")
