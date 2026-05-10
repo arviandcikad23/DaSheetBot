@@ -1,0 +1,944 @@
+
+[     UTC     ] Logs for dasheetbot-8jint3j2h55bsn3u9hfbvm.streamlit.app/
+────────────────────────────────────────────────────────────────────────────────────────
+[04:11:40] 🚀 Starting up repository: 'dasheetbot', branch: 'main', main module: 'app.py'
+[04:11:40] 🐙 Cloning repository...
+[04:11:41] 🐙 Cloning into '/mount/src/dasheetbot'...
+
+[04:11:41] 🐙 Cloned repository!
+[04:11:41] 🐙 Pulling code changes from Github...
+[04:11:42] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Resolved 146 packages in 1.86s
+Prepared 146 packages in 3.07s
+Installed 146 packages in 164ms
+ + aiohappyeyeballs==2.6.1
+ + aiohttp==3.13.5
+ + [2026-05-10 04:11:48.173390] aiosignal==1.4.0
+ + altair==6.1.0
+ + annotated-doc==0.0.4
+ + annotated-types==0.7.0
+ + anyio==4.13.0
+ + attrs[2026-05-10 04:11:48.173627] ==26.1.0
+ + backoff==2.2.1
+ + bcrypt==5.0.0
+ + blinker[2026-05-10 04:11:48.173782] ==1.9.0
+ + build==1.5.0
+ + cachetools==7.1.1
+ [2026-05-10 04:11:48.173918] + certifi==2026.4.22
+ + cffi==2.0.0
+ + charset-normalizer==3.4.7
+ + chromadb==1.5.9[2026-05-10 04:11:48.174113] 
+ + click==8.3.3
+ + cryptography==48.0.0
+ + dataclasses-json==0.6.7
+ + distro==1.9.0[2026-05-10 04:11:48.174261] 
+ + durationpy==0.10
+ + exa-py==1.16.2
+ + filelock==3.29.0
+ + [2026-05-10 04:11:48.174399] filetype==1.2.0
+ + flatbuffers==25.12.19
+ + frozenlist==[2026-05-10 04:11:48.174565] 1.8.0
+ + fsspec==2026.4.0
+ + gitdb==[2026-05-10 04:11:48.174726] 4.0.12
+ + gitpython==3.1.50
+ + google-ai-generativelanguage==[2026-05-10 04:11:48.174852] 0.10.0
+ + google-api-core==1.34.1
+ + google-auth==2.52.0
+ + [2026-05-10 04:11:48.174966] google-genai==2.0.1
+ + googleapis-common-protos==1.73.0
+ + greenlet==[2026-05-10 04:11:48.175186] 3.5.0
+ + grpcio==1.80.0
+ + grpcio-status==1.48.2
+ + h11==0.16.0
+ [2026-05-10 04:11:48.175381] + hf-xet==1.5.0
+ + httpcore==1.0.9
+ + httptools==0.7.1
+ + httpx[2026-05-10 04:11:48.175542] ==0.28.1
+ + httpx-sse==0.4.3
+ + huggingface-hub==1.14.0
+ + idna==3.13[2026-05-10 04:11:48.175697] 
+ + importlib-metadata==8.7.1
+ + importlib-resources==7.1.0
+ + itsdangerous==2.2.0
+ [2026-05-10 04:11:48.175828] + jinja2==3.1.6
+ + jiter==0.14.0
+ + jsonpatch==1.33
+ +[2026-05-10 04:11:48.175968]  jsonpointer==3.1.1
+ + jsonschema==4.26.0
+ + jsonschema-specifications==2025.9.1
+ + [2026-05-10 04:11:48.176190] kubernetes==35.0.0
+ + langchain==1.2.18
+ + langchain-chroma==1.1.0[2026-05-10 04:11:48.176332] 
+ + langchain-classic==1.0.7
+ + langchain-community==0.4.1
+ + langchain-core[2026-05-10 04:11:48.176489] ==1.3.3
+ + langchain-exa==1.1.0
+ + langchain-google-genai==3.2.0
+ + langchain-protocol==0.0.15
+ [2026-05-10 04:11:48.176650] + langchain-text-splitters==1.1.2
+ + langgraph==1.1.10
+ + langgraph-checkpoint==4.0.3
+ + [2026-05-10 04:11:48.176805] langgraph-prebuilt==1.0.13
+ + langgraph-sdk==0.3.14
+ + langsmith==0.8.3
+ + [2026-05-10 04:11:48.176929] markdown-it-py==4.2.0
+ + markupsafe==3.0.3
+ + marshmallow==3.26.2[2026-05-10 04:11:48.177078] 
+ + mdurl==0.1.2
+ + mmh3==5.2.1
+ + multidict==6.7.1
+ [2026-05-10 04:11:48.177197] + mypy-extensions==1.1.0
+ + narwhals==2.21.0
+ + [2026-05-10 04:11:48.177324] numpy==2.4.4
+ + oauthlib==3.3.1
+ + onnxruntime==1.26.0[2026-05-10 04:11:48.177423] 
+ + openai==2.36.0
+ + opentelemetry-api==1.41.1
+ + opentelemetry-exporter-otlp-proto-grpc==1.15.0[2026-05-10 04:11:48.177523] 
+ + opentelemetry-proto==1.15.0
+ + opentelemetry-sdk==1.41.1
+ + opentelemetry-semantic-conventions==0.62b1
+ +[2026-05-10 04:11:48.177621]  orjson==3.11.9
+ + ormsgpack==1.12.2
+ + overrides==7.7.0
+ + packaging==26.2[2026-05-10 04:11:48.177717] 
+ + pandas==3.0.2
+ + pillow==12.2.0
+ + propcache==0.5.2
+ [2026-05-10 04:11:48.177814] + proto-plus==1.27.1
+ + protobuf==3.20.3
+ + pyarrow==24.0.0
+ + pyasn1==[2026-05-10 04:11:48.177924] 0.6.3
+ + pyasn1-modules==0.4.2
+ + pybase64==1.4.3
+ + pycparser==3.0[2026-05-10 04:11:48.178062] 
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pydantic-settings==2.14.1
+ + [2026-05-10 04:11:48.178184] pydeck==0.9.2
+ + pygments==2.20.0
+ + pypdf==6.11.0
+ + pypika==0.51.1
+ + pyproject-hooks==1.2.0
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.2
+ [2026-05-10 04:11:48.178451] + python-multipart==0.0.27
+ + pyyaml==6.0.3
+ + referencing==[2026-05-10 04:11:48.178582] 0.37.0
+ + requests==2.33.1
+ + requests-oauthlib==2.0.0
+ + requests-toolbelt==1.0.0
+ +[2026-05-10 04:11:48.178711]  rich==15.0.0
+ + rpds-py==0.30.0
+ + shellingham==1.5.4
+ + six==[2026-05-10 04:11:48.178848] 1.17.0
+ + smmap==5.0.3
+ + sniffio==1.3.1
+ + sqlalchemy==2.0.49
+ + starlette==1.0.0
+ + streamlit==1.57.0
+ + tenacity==9.1.4
+ + tokenizers==0.23.1
+ + toml==0.10.2
+ + tqdm==4.67.3
+ + typer==0.25.1
+ + typing-extensions==4.15.0
+ + [2026-05-10 04:11:48.178971] typing-inspect==0.9.0
+ + typing-inspection==0.4.2
+ + urllib3==2.7.0
+ + uuid-utils==0.14.1
+ + uvicorn==0.46.0[2026-05-10 04:11:48.179157] 
+ + uvloop==0.22.1
+ + watchdog==6.0.0
+ + watchfiles==1.1.1
+ + websocket-client==[2026-05-10 04:11:48.179249] 1.9.0
+ + websockets==16.0
+ + xxhash==3.7.0
+ + yarl==1.23.0
+ + zipp==[2026-05-10 04:11:48.179330] 3.23.1
+ + zstandard==0.25.0
+Checking if Streamlit is installed
+Found Streamlit version 1.57.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Audited 1 package in 5ms
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[04:11:50] 🐍 Python dependencies were installed from /mount/src/dasheetbot/requirements.txt using uv.
+Check if streamlit is installed
+Streamlit is already installed
+[04:11:52] 📦 Processed dependencies!
+2026-05-10 04:11:53.947 Uvicorn server started on 0.0.0.0:8501
+
+
+
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/dasheetbot/app.py:11 in <module>                                   
+                                                                                
+      8 from langchain_core.embeddings import Embeddings                        
+      9 from langchain_community.document_loaders import PyPDFLoader            
+     10 from langchain_text_splitters import RecursiveCharacterTextSplitter     
+  ❱  11 from langchain_google_genai import ChatGoogleGenerativeAI               
+     12 from langchain_chroma import Chroma                                     
+     13                                                                         
+     14 # ==========================================                            
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_google_genai/__i  
+  nit__.py:60 in <module>                                                       
+                                                                                
+    57 ```                                                                      
+    58 """                                                                      
+    59                                                                          
+  ❱ 60 from langchain_google_genai._enums import (                              
+    61 │   HarmBlockThreshold,                                                  
+    62 │   HarmCategory,                                                        
+    63 │   MediaResolution,                                                     
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_google_genai/_en  
+  ums.py:1 in <module>                                                          
+                                                                                
+  ❱ 1 import google.ai.generativelanguage_v1beta as genai                       
+    2                                                                           
+    3 HarmBlockThreshold = genai.SafetySetting.HarmBlockThreshold               
+    4 HarmCategory = genai.HarmCategory                                         
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/__init__.py:38 in <module>                                          
+                                                                                
+     35 │   GenerativeServiceAsyncClient,                                       
+     36 │   GenerativeServiceClient,                                            
+     37 )                                                                       
+  ❱  38 from .services.model_service import ModelServiceAsyncClient, ModelServ  
+     39 from .services.permission_service import (                              
+     40 │   PermissionServiceAsyncClient,                                       
+     41 │   PermissionServiceClient,                                            
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/__init__.py:16 in <module>                   
+                                                                                
+    13 # See the License for the specific language governing permissions and    
+    14 # limitations under the License.                                         
+    15 #                                                                        
+  ❱ 16 from .async_client import ModelServiceAsyncClient                        
+    17 from .client import ModelServiceClient                                   
+    18                                                                          
+    19 __all__ = (                                                              
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/async_client.py:58 in <module>               
+                                                                                
+      55 from google.ai.generativelanguage_v1beta.types import model, model_se  
+      56 from google.ai.generativelanguage_v1beta.types import tuned_model      
+      57                                                                        
+  ❱   58 from .client import ModelServiceClient                                 
+      59 from .transports.base import DEFAULT_CLIENT_INFO, ModelServiceTranspo  
+      60 from .transports.grpc_asyncio import ModelServiceGrpcAsyncIOTransport  
+      61                                                                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/client.py:75 in <module>                     
+                                                                                
+      72 from google.ai.generativelanguage_v1beta.types import model, model_se  
+      73 from google.ai.generativelanguage_v1beta.types import tuned_model      
+      74                                                                        
+  ❱   75 from .transports.base import DEFAULT_CLIENT_INFO, ModelServiceTranspo  
+      76 from .transports.grpc import ModelServiceGrpcTransport                 
+      77 from .transports.grpc_asyncio import ModelServiceGrpcAsyncIOTransport  
+      78 from .transports.rest import ModelServiceRestTransport                 
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/transports/__init__.py:19 in <module>        
+                                                                                
+    16 from collections import OrderedDict                                      
+    17 from typing import Dict, Type                                            
+    18                                                                          
+  ❱ 19 from .base import ModelServiceTransport                                  
+    20 from .grpc import ModelServiceGrpcTransport                              
+    21 from .grpc_asyncio import ModelServiceGrpcAsyncIOTransport               
+    22 from .rest import ModelServiceRestInterceptor, ModelServiceRestTranspor  
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/transports/base.py:21 in <module>            
+                                                                                
+     18                                                                         
+     19 import google.api_core                                                  
+     20 from google.api_core import exceptions as core_exceptions               
+  ❱  21 from google.api_core import gapic_v1, operations_v1                     
+     22 from google.api_core import retry as retries                            
+     23 import google.auth  # type: ignore                                      
+     24 from google.auth import credentials as ga_credentials  # type: ignore   
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/api_core/operations  
+  _v1/__init__.py:17 in <module>                                                
+                                                                                
+    14                                                                          
+    15 """Package for interacting with the google.longrunning.operations meta-  
+    16                                                                          
+  ❱ 17 from google.api_core.operations_v1.abstract_operations_client import Ab  
+    18 from google.api_core.operations_v1.operations_async_client import Opera  
+    19 from google.api_core.operations_v1.operations_client import OperationsC  
+    20 from google.api_core.operations_v1.transports.rest import OperationsRes  
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/api_core/operations  
+  _v1/abstract_operations_client.py:17 in <module>                              
+                                                                                
+     14 # limitations under the License.                                        
+     15 #                                                                       
+     16 from collections import OrderedDict                                     
+  ❱  17 from distutils import util                                              
+     18 import os                                                               
+     19 import re                                                               
+     20 from typing import Dict, Optional, Sequence, Tuple, Type, Union         
+────────────────────────────────────────────────────────────────────────────────
+ModuleNotFoundError: No module named 'distutils'
+[04:19:57] 🐙 Pulling code changes from Github...
+[04:19:58] 📦 Processing dependencies...
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/dasheetbot/app.py:11 in <module>                                   
+                                                                                
+      8 from langchain_core.embeddings import Embeddings                        
+      9 from langchain_community.document_loaders import PyPDFLoader            
+     10 from langchain_text_splitters import RecursiveCharacterTextSplitter     
+  ❱  11 from langchain_google_genai import ChatGoogleGenerativeAI               
+     12 from langchain_chroma import Chroma                                     
+     13                                                                         
+     14 # ==========================================                            
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_google_genai/__i  
+  nit__.py:60 in <module>                                                       
+                                                                                
+    57 ```                                                                      
+    58 """                                                                      
+    59                                                                          
+  ❱ 60 from langchain_google_genai._enums import (                              
+    61 │   HarmBlockThreshold,                                                  
+    62 │   HarmCategory,                                                        
+    63 │   MediaResolution,                                                     
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_google_genai/_en  
+  ums.py:1 in <module>                                                          
+                                                                                
+  ❱ 1 import google.ai.generativelanguage_v1beta as genai                       
+    2                                                                           
+    3 HarmBlockThreshold = genai.SafetySetting.HarmBlockThreshold               
+    4 HarmCategory = genai.HarmCategory                                         
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/__init__.py:38 in <module>                                          
+                                                                                
+     35 │   GenerativeServiceAsyncClient,                                       
+     36 │   GenerativeServiceClient,                                            
+     37 )                                                                       
+  ❱  38 from .services.model_service import ModelServiceAsyncClient, ModelServ  
+     39 from .services.permission_service import (                              
+     40 │   PermissionServiceAsyncClient,                                       
+     41 │   PermissionServiceClient,                                            
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/__init__.py:16 in <module>                   
+                                                                                
+    13 # See the License for the specific language governing permissions and    
+    14 # limitations under the License.                                         
+    15 #                                                                        
+  ❱ 16 from .async_client import ModelServiceAsyncClient                        
+    17 from .client import ModelServiceClient                                   
+    18                                                                          
+    19 __all__ = (                                                              
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/async_client.py:58 in <module>               
+                                                                                
+      55 from google.ai.generativelanguage_v1beta.types import model, model_se  
+      56 from google.ai.generativelanguage_v1beta.types import tuned_model      
+      57                                                                        
+  ❱   58 from .client import ModelServiceClient                                 
+      59 from .transports.base import DEFAULT_CLIENT_INFO, ModelServiceTranspo  
+      60 from .transports.grpc_asyncio import ModelServiceGrpcAsyncIOTransport  
+      61                                                                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/client.py:75 in <module>                     
+                                                                                
+      72 from google.ai.generativelanguage_v1beta.types import model, model_se  
+      73 from google.ai.generativelanguage_v1beta.types import tuned_model      
+      74                                                                        
+  ❱   75 from .transports.base import DEFAULT_CLIENT_INFO, ModelServiceTranspo  
+      76 from .transports.grpc import ModelServiceGrpcTransport                 
+      77 from .transports.grpc_asyncio import ModelServiceGrpcAsyncIOTransport  
+      78 from .transports.rest import ModelServiceRestTransport                 
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/transports/__init__.py:19 in <module>        
+                                                                                
+    16 from collections import OrderedDict                                      
+    17 from typing import Dict, Type                                            
+    18                                                                          
+  ❱ 19 from .base import ModelServiceTransport                                  
+    20 from .grpc import ModelServiceGrpcTransport                              
+    21 from .grpc_asyncio import ModelServiceGrpcAsyncIOTransport               
+    22 from .rest import ModelServiceRestInterceptor, ModelServiceRestTranspor  
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/transports/base.py:21 in <module>            
+                                                                                
+     18                                                                         
+     19 import google.api_core                                                  
+     20 from google.api_core import exceptions as core_exceptions               
+  ❱  21 from google.api_core import gapic_v1, operations_v1                     
+     22 from google.api_core import retry as retries                            
+     23 import google.auth  # type: ignore                                      
+     24 from google.auth import credentials as ga_credentials  # type: ignore   
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/api_core/operations  
+  _v1/__init__.py:17 in <module>                                                
+                                                                                
+    14                                                                          
+    15 """Package for interacting with the google.longrunning.operations meta-  
+    16                                                                          
+  ❱ 17 from google.api_core.operations_v1.abstract_operations_client import Ab  
+    18 from google.api_core.operations_v1.operations_async_client import Opera  
+    19 from google.api_core.operations_v1.operations_client import OperationsC  
+    20 from google.api_core.operations_v1.transports.rest import OperationsRes  
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/api_core/operations  
+  _v1/abstract_operations_client.py:17 in <module>                              
+                                                                                
+     14 # limitations under the License.                                        
+     15 #                                                                       
+     16 from collections import OrderedDict                                     
+  ❱  17 from distutils import util                                              
+     18 import os                                                               
+     19 import re                                                               
+     20 from typing import Dict, Optional, Sequence, Tuple, Type, Union         
+────────────────────────────────────────────────────────────────────────────────
+ModuleNotFoundError: No module named 'distutils'
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Resolved 143 packages in 491ms
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/dasheetbot/app.py:11 in <module>                                   
+                                                                                
+      8 from langchain_core.embeddings import Embeddings                        
+      9 from langchain_community.document_loaders import PyPDFLoader            
+     10 from langchain_text_splitters import RecursiveCharacterTextSplitter     
+  ❱  11 from langchain_google_genai import ChatGoogleGenerativeAI               
+     12 from langchain_chroma import Chroma                                     
+     13 from langchain_core.tools import tool                                   
+     14 from langgraph.prebuilt import create_react_agent                       
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_google_genai/__i  
+  nit__.py:60 in <module>                                                       
+                                                                                
+    57 ```                                                                      
+    58 """                                                                      
+    59                                                                          
+  ❱ 60 from langchain_google_genai._enums import (                              
+    61 │   HarmBlockThreshold,                                                  
+    62 │   HarmCategory,                                                        
+    63 │   MediaResolution,                                                     
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_google_genai/_en  
+  ums.py:1 in <module>                                                          
+                                                                                
+  ❱ 1 import google.ai.generativelanguage_v1beta as genai                       
+    2                                                                           
+    3 HarmBlockThreshold = genai.SafetySetting.HarmBlockThreshold               
+    4 HarmCategory = genai.HarmCategory                                         
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/__init__.py:38 in <module>                                          
+                                                                                
+     35 │   GenerativeServiceAsyncClient,                                       
+     36 │   GenerativeServiceClient,                                            
+     37 )                                                                       
+  ❱  38 from .services.model_service import ModelServiceAsyncClient, ModelServ  
+     39 from .services.permission_service import (                              
+     40 │   PermissionServiceAsyncClient,                                       
+     41 │   PermissionServiceClient,                                            
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/__init__.py:16 in <module>                   
+                                                                                
+    13 # See the License for the specific language governing permissions and    
+    14 # limitations under the License.                                         
+    15 #                                                                        
+  ❱ 16 from .async_client import ModelServiceAsyncClient                        
+    17 from .client import ModelServiceClient                                   
+    18                                                                          
+    19 __all__ = (                                                              
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/async_client.py:58 in <module>               
+                                                                                
+      55 from google.ai.generativelanguage_v1beta.types import model, model_se  
+      56 from google.ai.generativelanguage_v1beta.types import tuned_model      
+      57                                                                        
+  ❱   58 from .client import ModelServiceClient                                 
+      59 from .transports.base import DEFAULT_CLIENT_INFO, ModelServiceTranspo  
+      60 from .transports.grpc_asyncio import ModelServiceGrpcAsyncIOTransport  
+      61                                                                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/client.py:75 in <module>                     
+                                                                                
+      72 from google.ai.generativelanguage_v1beta.types import model, model_se  
+      73 from google.ai.generativelanguage_v1beta.types import tuned_model      
+      74                                                                        
+  ❱   75 from .transports.base import DEFAULT_CLIENT_INFO, ModelServiceTranspo  
+      76 from .transports.grpc import ModelServiceGrpcTransport                 
+      77 from .transports.grpc_asyncio import ModelServiceGrpcAsyncIOTransport  
+      78 from .transports.rest import ModelServiceRestTransport                 
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/transports/__init__.py:19 in <module>        
+                                                                                
+    16 from collections import OrderedDict                                      
+    17 from typing import Dict, Type                                            
+    18                                                                          
+  ❱ 19 from .base import ModelServiceTransport                                  
+    20 from .grpc import ModelServiceGrpcTransport                              
+    21 from .grpc_asyncio import ModelServiceGrpcAsyncIOTransport               
+    22 from .rest import ModelServiceRestInterceptor, ModelServiceRestTranspor  
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/ai/generativelangua  
+  ge_v1beta/services/model_service/transports/base.py:21 in <module>            
+                                                                                
+     18                                                                         
+     19 import google.api_core                                                  
+     20 from google.api_core import exceptions as core_exceptions               
+  ❱  21 from google.api_core import gapic_v1, operations_v1                     
+     22 from google.api_core import retry as retries                            
+     23 import google.auth  # type: ignore                                      
+     24 from google.auth import credentials as ga_credentials  # type: ignore   
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/api_core/operations  
+  _v1/__init__.py:17 in <module>                                                
+                                                                                
+    14                                                                          
+    15 """Package for interacting with the google.longrunning.operations meta-  
+    16                                                                          
+  ❱ 17 from google.api_core.operations_v1.abstract_operations_client import Ab  
+    18 from google.api_core.operations_v1.operations_async_client import Opera  
+    19 from google.api_core.operations_v1.operations_client import OperationsC  
+    20 from google.api_core.operations_v1.transports.rest import OperationsRes  
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/api_core/operations  
+  _v1/abstract_operations_client.py:17 in <module>                              
+                                                                                
+     14 # limitations under the License.                                        
+     15 #                                                                       
+     16 from collections import OrderedDict                                     
+  ❱  17 from distutils import util                                              
+     18 import os                                                               
+     19 import re                                                               
+     20 from typing import Dict, Optional, Sequence, Tuple, Type, Union         
+────────────────────────────────────────────────────────────────────────────────
+ModuleNotFoundError: No module named 'distutils'
+Prepared 10 packages in 146ms
+Uninstalled 8 packages in 29ms
+Installed 10 packages in 25ms
+ - google-ai-generativelanguage[2026-05-10 04:19:59.289781] ==0.10.0
+ + google-ai-generativelanguage==0.11.0
+ - google-api-core==1.34.1
+ + google-api-core==2.30.3
+ - googleapis-common-protos==1.73.0
+ + googleapis-common-protos==1.75.0
+ - grpcio-status==1.48.2
+ + grpcio-status==1.80.0
+ + opentelemetry-exporter-otlp-proto-common==1.41.1
+ - opentelemetry-exporter-otlp-proto-grpc==1.15.0
+ + opentelemetry-exporter-otlp-proto-grpc==1.41.1
+ - opentelemetry-proto==1.15.0
+ + opentelemetry-proto==1.41.1
+ - proto-plus==1.27.1
+ + proto-plus==1.28.0
+ - protobuf==3.20.3
+ + protobuf==6.33.6
+ + setuptools==82.0.1
+Checking if Streamlit is installed
+Found Streamlit version 1.57.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Audited 1 package in 3ms
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[04:20:00] 🐍 Python dependencies were installed from /mount/src/dasheetbot/requirements.txt using uv.
+[04:20:00] 📦 Processed dependencies!
+  Stopping...
+2026-05-10 04:20:03.654 Uvicorn server started on 0.0.0.0:8501
+
+
+
+[04:20:04] 🔄 Updated app!
+/home/adminuser/venv/lib/python3.14/site-packages/langgraph/checkpoint/serde/encrypted.py:5: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+  from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+[04:39:12] 🐙 Pulling code changes from Github...
+[04:39:13] 📦 Processing dependencies...
+[04:39:13] 📦 Processed dependencies!
+[04:39:14] 🔄 Updated app!
+[04:44:43] 🐙 Pulling code changes from Github...
+[04:44:44] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Resolved 139 packages in 396ms
+Prepared 6 packages in 105ms
+Uninstalled 6 packages in 18ms
+Installed 6 packages in 15ms
+ - backoff==2.2.1[2026-05-10 04:44:45.687043] 
+ + backoff==1.11.1
+ - google-genai==2.0.1
+ + google-genai==1.75.0
+ - langchain-google-genai==3.2.0
+ + langchain-google-genai==4.2.2
+ - opentelemetry-exporter-otlp-proto-grpc==1.41.1
+ + opentelemetry-exporter-otlp-proto-grpc==1.11.1
+ - opentelemetry-proto==1.41.1
+ + opentelemetry-proto==1.11.1
+ - protobuf==6.33.6
+ + protobuf==7.34.1
+Checking if Streamlit is installed
+Found Streamlit version 1.57.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Audited 1 package in 3ms
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[04:44:47] 🐍 Python dependencies were installed from /mount/src/dasheetbot/requirements.txt using uv.
+[04:44:47] 📦 Processed dependencies!
+  Stopping...
+2026-05-10 04:44:50.177 Uvicorn server started on 0.0.0.0:8501
+
+
+
+[04:44:51] 🔄 Updated app!
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/dasheetbot/app.py:12 in <module>                                   
+                                                                                
+      9 from langchain_community.document_loaders import PyPDFLoader            
+     10 from langchain_text_splitters import RecursiveCharacterTextSplitter     
+     11 from langchain_google_genai import ChatGoogleGenerativeAI               
+  ❱  12 from langchain_chroma import Chroma                                     
+     13 from langchain_core.tools import tool                                   
+     14 from langgraph.prebuilt import create_react_agent                       
+     15 from langchain_core.messages import HumanMessage, AIMessage             
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_chroma/__init__.  
+  py:3 in <module>                                                              
+                                                                                
+    1 """LangChain integration for Chroma vector database."""                   
+    2                                                                           
+  ❱ 3 from langchain_chroma.vectorstores import Chroma                          
+    4                                                                           
+    5 __all__ = [                                                               
+    6 │   "Chroma",                                                             
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/langchain_chroma/vectorsto  
+  res.py:18 in <module>                                                         
+                                                                                
+      15 │   Any,                                                               
+      16 )                                                                      
+      17                                                                        
+  ❱   18 import chromadb                                                        
+      19 import chromadb.config                                                 
+      20 import numpy as np                                                     
+      21 from chromadb import Search, Settings                                  
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/chromadb/__init__.py:11 in  
+  <module>                                                                      
+                                                                                
+      8 │   AdminClient as AdminClientCreator,                                  
+      9 )                                                                       
+     10 from chromadb.api.async_client import AsyncClient as AsyncClientCreato  
+  ❱  11 from chromadb.auth.token_authn import TokenTransportHeader              
+     12 import chromadb.config                                                  
+     13 from chromadb.config import DEFAULT_DATABASE, DEFAULT_TENANT, Settings  
+     14 from chromadb.api import AdminAPI, AsyncClientAPI, ClientAPI            
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/chromadb/auth/token_authn/  
+  __init__.py:24 in <module>                                                    
+                                                                                
+     21 )                                                                       
+     22 from chromadb.config import System                                      
+     23 from chromadb.errors import ChromaAuthError                             
+  ❱  24 from chromadb.telemetry.opentelemetry import (                          
+     25 │   OpenTelemetryGranularity,                                           
+     26 │   trace_method,                                                       
+     27 )                                                                       
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/chromadb/telemetry/opentel  
+  emetry/__init__.py:13 in <module>                                             
+                                                                                
+     10 from opentelemetry.sdk.trace.export import (                            
+     11 │   BatchSpanProcessor,                                                 
+     12 )                                                                       
+  ❱  13 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLP  
+     14                                                                         
+     15 from chromadb.config import Component                                   
+     16 from chromadb.config import System                                      
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/opentelemetry/exporter/otl  
+  p/proto/grpc/trace_exporter/__init__.py:22 in <module>                        
+                                                                                
+     19                                                                         
+     20 from grpc import ChannelCredentials, Compression                        
+     21                                                                         
+  ❱  22 from opentelemetry.exporter.otlp.proto.grpc.exporter import (           
+     23 │   OTLPExporterMixin,                                                  
+     24 │   _get_credentials,                                                   
+     25 │   _translate_key_values,                                              
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/opentelemetry/exporter/otl  
+  p/proto/grpc/exporter.py:39 in <module>                                       
+                                                                                
+     36 │   ssl_channel_credentials,                                            
+     37 )                                                                       
+     38                                                                         
+  ❱  39 from opentelemetry.proto.common.v1.common_pb2 import (                  
+     40 │   AnyValue,                                                           
+     41 │   ArrayValue,                                                         
+     42 │   KeyValue,                                                           
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/opentelemetry/proto/common  
+  /v1/common_pb2.py:36 in <module>                                              
+                                                                                
+     33   containing_type=None,                                                 
+     34   create_key=_descriptor._internal_create_key,                          
+     35   fields=[                                                              
+  ❱  36 │   _descriptor.FieldDescriptor(                                        
+     37 │     name='string_value', full_name='opentelemetry.proto.common.v1.An  
+     38 │     number=1, type=9, cpp_type=9, label=1,                            
+     39 │     has_default_value=False, default_value=b"".decode('utf-8'),       
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/google/protobuf/descriptor  
+  .py:675 in __new__                                                            
+                                                                                
+     672 │   │   file=None,                                                     
+     673 │   │   create_key=None,                                               
+     674 │   ):  # pylint: disable=redefined-builtin                            
+  ❱  675 │     _message.Message._CheckCalledFromGeneratedFile()                 
+     676 │     if is_extension:                                                 
+     677 │   │   return _message.default_pool.FindExtensionByName(full_name)    
+     678 │     else:                                                            
+────────────────────────────────────────────────────────────────────────────────
+TypeError: Descriptors cannot be created directly.
+If this call came from a _pb2.py file, your generated code is out of date and 
+must be regenerated with protoc >= 3.19.0.
+If you cannot immediately regenerate your protos, some other possible 
+workarounds are:
+ 1. Downgrade the protobuf package to 3.20.x or lower.
+ 2. Set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python (but this will use 
+pure-Python parsing and will be much slower).
+
+More information: 
+https://developers.google.com/protocol-buffers/docs/news/2022-05-06#python-updat
+es
+[04:47:14] 🐙 Pulling code changes from Github...
+[04:47:15] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Resolved 96 packages in 329ms
+Prepared 2 packages in 497ms
+Uninstalled 1 package in 9ms
+Installed 2 packages in 15ms
+ + faiss-cpu[2026-05-10 04:47:16.760903] ==1.13.2
+ - google-genai==1.75.0
+ + google-genai==2.0.1
+Checking if Streamlit is installed
+Found Streamlit version 1.57.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Audited 1 package in 3ms
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[04:47:18] 🐍 Python dependencies were installed from /mount/src/dasheetbot/requirements.txt using uv.
+[04:47:18] 📦 Processed dependencies!
+  Stopping...
+2026-05-10 04:47:20.773 Uvicorn server started on 0.0.0.0:8501
+
+
+
+[04:47:21] 🔄 Updated app!
+[04:50:57] 🐙 Pulling code changes from Github...
+[04:50:58] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Resolved 87 packages in 304ms
+Audited 87 packages in 0.17ms
+Checking if Streamlit is installed
+Found Streamlit version 1.57.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Audited 1 package in 3ms
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[04:51:00] 🐍 Python dependencies were installed from /mount/src/dasheetbot/requirements.txt using uv.
+[04:51:00] 📦 Processed dependencies!
+  Stopping...
+2026-05-10 04:51:03.696 Uvicorn server started on 0.0.0.0:8501
+
+
+
+[04:51:04] 🔄 Updated app!
+[04:53:54] 🐙 Pulling code changes from Github...
+[04:53:55] 📦 Processing dependencies...
+[04:53:55] 📦 Processed dependencies!
+[04:53:57] 🔄 Updated app!
+[04:57:04] 🐙 Pulling code changes from Github...
+[04:57:05] 📦 Processing dependencies...
+[04:57:05] 📦 Processed dependencies!
+[04:57:06] 🔄 Updated app!
+[04:59:04] 🐙 Pulling code changes from Github...
+[04:59:05] 📦 Processing dependencies...
+[04:59:05] 📦 Processed dependencies!
+[04:59:06] 🔄 Updated app!
+[05:11:31] 🐙 Pulling code changes from Github...
+[05:11:32] 📦 Processing dependencies...
+[05:11:32] 📦 Processed dependencies!
+[05:11:33] 🔄 Updated app!
+[05:16:36] 🐙 Pulling code changes from Github...
+[05:16:37] 📦 Processing dependencies...
+[05:16:37] 📦 Processed dependencies!
+[05:16:39] 🔄 Updated app!
+[05:19:47] 🐙 Pulling code changes from Github...
+[05:19:48] 📦 Processing dependencies...
+[05:19:48] 📦 Processed dependencies!
+[05:19:49] 🔄 Updated app!
+ConnectionClosedError exception in shielded future
+future: <Future finished exception=ConnectionClosedError(None, Close(code=<CloseCode.INTERNAL_ERROR: 1011>, reason='keepalive ping timeout'), None)>
+Traceback (most recent call last):
+  File "/home/adminuser/venv/lib/python3.14/site-packages/websockets/legacy/protocol.py", line 1276, in close_connection
+    await self.transfer_data_task
+  File "/home/adminuser/venv/lib/python3.14/site-packages/websockets/legacy/protocol.py", line 940, in transfer_data
+    message = await self.read_message()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/websockets/legacy/protocol.py", line 1010, in read_message
+    frame = await self.read_data_frame(max_size=self.max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/websockets/legacy/protocol.py", line 1087, in read_data_frame
+    frame = await self.read_frame(max_size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/websockets/legacy/protocol.py", line 1144, in read_frame
+    frame = await Frame.read(
+            ^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/home/adminuser/venv/lib/python3.14/site-packages/websockets/legacy/framing.py", line 70, in read
+    data = await reader(2)
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.14/asyncio/streams.py", line 769, in readexactly
+    await self._wait_for_data('readexactly')
+  File "/usr/local/lib/python3.14/asyncio/streams.py", line 539, in _wait_for_data
+    await self._waiter
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+websockets.exceptions.ConnectionClosedError: sent 1011 (internal error) keepalive ping timeout; no close frame received
+[05:22:02] 🐙 Pulling code changes from Github...
+[05:22:03] 📦 Processing dependencies...
+
+──────────────────────────────────────── uv ───────────────────────────────────────────
+
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Resolved 44 packages in 122ms
+Audited 44 packages in 0.12ms
+Checking if Streamlit is installed
+Found Streamlit version 1.57.0 in the environment
+Installing rich for an improved exception logging
+Using uv pip install.
+Using Python 3.14.4 environment at /home/adminuser/venv
+Audited 1 package in 4ms
+
+────────────────────────────────────────────────────────────────────────────────────────
+
+[05:22:05] 🐍 Python dependencies were installed from /mount/src/dasheetbot/requirements.txt using uv.
+[05:22:05] 📦 Processed dependencies!
+  Stopping...
+[05:22:06] 🔌 Disconnecting...
+2026-05-10 05:22:07.253 Uvicorn server started on 0.0.0.0:8501
+[05:22:07] 🖥 Provisioning machine...
+[05:22:07] 🎛 Preparing system...
+[05:22:07] ⛓ Spinning up manager process...
+
+
+
+[05:22:08] 🔄 Updated app!
+[05:30:37] 🐙 Pulling code changes from Github...
+[05:30:38] 📦 Processing dependencies...
+[05:30:38] 📦 Processed dependencies!
+────────────────────── Traceback (most recent call last) ───────────────────────
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/exec_code.py:129 in exec_func_with_error_handling                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/scriptru  
+  nner/script_runner.py:689 in code_to_exec                                     
+                                                                                
+  /mount/src/dasheetbot/app.py:22 in <module>                                   
+                                                                                
+     19 st.title("DaSheet_BOT 🤖")                                              
+     20 st.write("Asisten AI untuk menganalisis dokumen PDF menggunakan Long C  
+     21                                                                         
+  ❱  22 # ==========================================                            
+     23 # SIDEBAR — INPUT API KEY & UPLOAD PDF                                  
+     24 # ==========================================                            
+     25 with st.sidebar:                                                        
+                                                                                
+  /home/adminuser/venv/lib/python3.14/site-packages/streamlit/runtime/metrics_  
+  util.py:698 in wrapped_func                                                   
+────────────────────────────────────────────────────────────────────────────────
+TypeError: MarkdownMixin.markdown() got an unexpected keyword argument 
+'unsafe_allow_stdio'. Did you mean 'unsafe_allow_html'?
+[05:30:40] 🔄 Updated app!
