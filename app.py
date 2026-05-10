@@ -17,9 +17,29 @@ st.set_page_config(page_title="DaSheet_BOT Pro", page_icon="dashetbot24x24.ico",
 # Custom CSS
 st.markdown("""
     <style>
-    /* Warna latar belakang utama (Putih Tulang) */
+    /* Warna latar belakang utama (Putih Tulang Terang) */
     .stApp {
-        background-color: #F9F6EE;
+        background-color: #FDFCF4 !important;
+    }
+    
+    /* Warna latar belakang Sidebar (Putih Tulang Terang) */
+    [data-testid="stSidebar"] {
+        background-color: #FDFCF4 !important;
+    }
+    
+    /* Warna latar belakang Header Atas (Putih Tulang Terang) */
+    [data-testid="stHeader"] {
+        background-color: #FDFCF4 !important;
+    }
+    
+    /* Tema Gelembung Chat (Cyan Kebiruan) */
+    [data-testid="stChatMessage"] {
+        background-color: #E0F7FA !important;
+        border-radius: 10px;
+        border-left: 5px solid #00E5FF !important;
+        padding: 15px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0,229,255,0.1);
     }
     
     /* Warna garis pemisah (Cyan) */
