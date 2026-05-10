@@ -36,6 +36,12 @@ def setup_halaman():
         background-color: #FDFCF4 !important;
     }
     
+    /* Memperlebar Sidebar menjadi 400px */
+    [data-testid="stSidebar"] {
+        min-width: 400px !important;
+        max-width: 400px !important;
+    }
+    
     /* Gelembung Chat AI (Cyan Lembut) */
     [data-testid="stChatMessage"] {
         background-color: #E0F7FA !important;
