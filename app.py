@@ -7,7 +7,14 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_chroma import Chroma
-from langchain.tools import create_retriever_tool
+try:
+    from langchain.tools.retriever import create_retriever_tool
+except (ImportError, ModuleNotFoundError):
+    try:
+        from langchain.tools import create_retriever_tool
+    except (ImportError, ModuleNotFoundError):
+        from langchain_community.tools.retriever import create_retriever_tool
+
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
 from langchain_core.messages import HumanMessage, AIMessage
