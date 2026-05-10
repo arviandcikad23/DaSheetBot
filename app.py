@@ -79,7 +79,13 @@ def cari_internet_exa(query, exa_key):
 
 # 6. FUNGSI REQUEST GEMINI
 def request_gemini(prompt, system, api_key):
-    models = ["gemini-2.0-flash", "gemini-2.0-flash-lite"]
+    # Mencoba berbagai model dari yang terbaru hingga yang paling stabil
+    models = [
+        "gemini-2.5-flash",
+        "gemini-2.0-flash", 
+        "gemini-2.0-flash-lite",
+        "gemini-1.5-flash"
+    ]
     payload = {"contents": [{"role": "user", "parts": [{"text": f"{system}\n\n{prompt}"}]}], "generationConfig": {"temperature": 0.2}}
     err_msg = ""
     for m_name in models:
