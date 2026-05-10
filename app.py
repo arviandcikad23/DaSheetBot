@@ -160,15 +160,17 @@ if process_btn:
 # ==========================================
 # FUNGSI CHAT: REST API v1 LANGSUNG
 # ==========================================
-def generate_response(prompt: str, system: str, api_key: str, model: str = "gemini-1.5-flash") -> str:
+def generate_response(prompt: str, system: str, api_key: str, model: str = "gemini-2.0-flash") -> str:
     """Memanggil Google Generative Language REST API v1 langsung untuk generate content."""
     url = (
         f"https://generativelanguage.googleapis.com/v1/models/"
         f"{model}:generateContent?key={api_key}"
     )
+    # systemInstruction tidak didukung di v1 endpoint,
+    # sehingga kita gabungkan langsung ke dalam konten pesan.
+    full_prompt = f"{system}\n\n{prompt}"
     payload = {
-        "systemInstruction": {"parts": [{"text": system}]},
-        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+        "contents": [{"role": "user", "parts": [{"text": full_prompt}]}],
         "generationConfig": {"temperature": 0.2}
     }
     resp = requests.post(url, json=payload, timeout=60)
