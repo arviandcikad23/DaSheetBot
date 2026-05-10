@@ -3,24 +3,28 @@ import tempfile
 import os
 import time
 import shutil
+
 import google.genai as genai
-from google.genai import types as genai_types
 from langchain_core.embeddings import Embeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_chroma import Chroma
+from langchain_core.tools import tool
+from langgraph.prebuilt import create_react_agent
+from langchain_core.messages import HumanMessage, AIMessage
 
 # ==========================================
-# CUSTOM EMBEDDING CLASS (Menghindari v1beta routing error)
-# Menggunakan Google GenAI SDK langsung yang memanggil endpoint /v1
+# CUSTOM EMBEDDING CLASS
+# Menggunakan google-genai SDK langsung (endpoint /v1, bukan /v1beta)
+# Menghindari error 404 yang terjadi pada langchain-google-genai wrapper
 # ==========================================
 class DirectGoogleEmbeddings(Embeddings):
     def __init__(self, model_name: str = "models/text-embedding-004", api_key: str = ""):
         self.model_name = model_name
         self.client = genai.Client(api_key=api_key)
 
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+    def embed_documents(self, texts: list) -> list:
         results = []
         for text in texts:
             response = self.client.models.embed_content(
@@ -30,54 +34,57 @@ class DirectGoogleEmbeddings(Embeddings):
             results.append(response.embeddings[0].values)
         return results
 
-    def embed_query(self, text: str) -> list[float]:
+    def embed_query(self, text: str) -> list:
         response = self.client.models.embed_content(
             model=self.model_name,
             contents=text,
         )
         return response.embeddings[0].values
+
+
+# Fallback untuk create_retriever_tool jika tidak ditemukan di lokasi standar
 try:
     from langchain.tools.retriever import create_retriever_tool
 except (ImportError, ModuleNotFoundError):
     try:
         from langchain.tools import create_retriever_tool
     except (ImportError, ModuleNotFoundError):
-        try:
-            from langchain_community.tools.retriever import create_retriever_tool
-        except (ImportError, ModuleNotFoundError):
-            from langchain_core.tools import Tool
-            def create_retriever_tool(retriever, name, description):
-                def func(query: str) -> str:
-                    docs = retriever.invoke(query)
-                    return "\n\n".join([d.page_content for d in docs])
-                return Tool(name=name, description=description, func=func)
+        from langchain_core.tools import Tool
+        def create_retriever_tool(retriever, name, description):
+            def func(query: str) -> str:
+                docs = retriever.invoke(query)
+                return "\n\n".join([d.page_content for d in docs])
+            return Tool(name=name, description=description, func=func)
 
-from langchain_core.tools import tool
-from langgraph.prebuilt import create_react_agent
-from langchain_core.messages import HumanMessage, AIMessage
-from exa_py import Exa
 
 # ==========================================
-# UI LAYOUT & CONFIGURATION
+# UI LAYOUT & KONFIGURASI
 # ==========================================
 st.set_page_config(page_title="DaSheet_BOT", page_icon="🤖", layout="wide")
 st.title("DaSheet_BOT 🤖")
-st.write("AI Assistant untuk menganalisis datasheet komponen elektronik dan membandingkan harga/alternatif dari Web.")
+st.write("AI Assistant untuk menganalisis dokumen menggunakan Google Gemini & RAG.")
 
 with st.sidebar:
-    st.header("Konfigurasi API")
-    google_api_key = st.text_input("Google API Key", type="password", help="Dapatkan di Google AI Studio")
-    exa_api_key = st.text_input("Exa API Key", type="password", help="Dapatkan di Exa AI")
-    
-    st.markdown("---")
-    st.header("Unggah Datasheet")
-    uploaded_files = st.file_uploader("Unggah PDF Datasheet (Bisa lebih dari 1)", type="pdf", accept_multiple_files=True)
-    process_btn = st.button("Proses Datasheet")
+    st.header("⚙️ Konfigurasi API")
+    google_api_key = st.text_input(
+        "Google API Key",
+        type="password",
+        help="Dapatkan di Google AI Studio (aistudio.google.com)"
+    )
 
-# API Keys Sanitization
-# Menggunakan .strip() untuk mencegah error INVALID_ARGUMENT karena whitespace
+    st.markdown("---")
+    st.header("📄 Unggah Dokumen PDF")
+    uploaded_files = st.file_uploader(
+        "Unggah PDF (bisa lebih dari 1)",
+        type="pdf",
+        accept_multiple_files=True
+    )
+    process_btn = st.button("🔄 Proses Dokumen")
+
+
+# Sanitasi API Key — mencegah INVALID_ARGUMENT karena spasi
 os.environ["GOOGLE_API_KEY"] = google_api_key.strip() if google_api_key else ""
-os.environ["EXA_API_KEY"] = exa_api_key.strip() if exa_api_key else ""
+
 
 # ==========================================
 # STATE INITIALIZATION
@@ -87,77 +94,47 @@ if "messages" not in st.session_state:
 if "retriever" not in st.session_state:
     st.session_state.retriever = None
 
-# ==========================================
-# WEB SEARCH TOOL (EXA AI)
-# ==========================================
-@tool
-def web_search(query: str) -> str:
-    """Useful for searching the web for live market prices, component alternatives, and technical articles."""
-    if not os.environ.get("EXA_API_KEY"):
-        return "Error: Exa API Key not provided. Please enter the API Key in the sidebar."
-    try:
-        exa = Exa(api_key=os.environ["EXA_API_KEY"])
-        response = exa.search_and_contents(
-            query,
-            type="neural",
-            use_autoprompt=True,
-            num_results=3,
-            text=True
-        )
-        results = []
-        for res in response.results:
-            results.append(f"Title: {res.title}\nURL: {res.url}\nContent: {res.text}\n")
-        return "\n".join(results) if results else "No results found."
-    except Exception as e:
-        return f"Error during web search: {str(e)}"
 
 # ==========================================
 # RAG PIPELINE (PDF PROCESSING)
 # ==========================================
 if process_btn:
     if not os.environ.get("GOOGLE_API_KEY"):
-        st.sidebar.error("Silakan masukkan Google API Key terlebih dahulu.")
+        st.sidebar.error("❌ Silakan masukkan Google API Key terlebih dahulu.")
     elif not uploaded_files:
-        st.sidebar.warning("Silakan unggah minimal 1 file PDF datasheet.")
+        st.sidebar.warning("⚠️ Silakan unggah minimal 1 file PDF.")
     else:
         with st.spinner("Memproses dokumen PDF..."):
             all_splits = []
-            
-            # Read uploaded PDFs using tempfile
+
             for uploaded_file in uploaded_files:
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
                     tmp_file.write(uploaded_file.getvalue())
                     tmp_file_path = tmp_file.name
-                
+
                 try:
                     loader = PyPDFLoader(tmp_file_path)
                     docs = loader.load()
-                    
-                    # Chunking
-                    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-                    splits = text_splitter.split_documents(docs)
+                    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+                    splits = splitter.split_documents(docs)
                     all_splits.extend(splits)
                 except Exception as e:
-                    st.sidebar.error(f"Gagal memproses file {uploaded_file.name}: {e}")
+                    st.sidebar.error(f"Gagal memproses '{uploaded_file.name}': {e}")
                 finally:
                     os.remove(tmp_file_path)
-            
+
             if all_splits:
                 persist_dir = "./db_datasheet"
-                
-                # ChromaDB Locking Error Prevention
+
+                # Hapus database lama untuk mencegah ChromaDB lock error
                 if os.path.exists(persist_dir):
                     shutil.rmtree(persist_dir, ignore_errors=True)
                     time.sleep(1)
-                
-                # Embedding menggunakan SDK baru google-genai (kompatibel Python 3.12+)
+
+                # Inisialisasi embedding menggunakan google-genai SDK
                 api_key = os.environ["GOOGLE_API_KEY"]
-                embedding_models = [
-                    "models/text-embedding-004",
-                    "models/gemini-embedding-exp-03-07",
-                ]
                 embeddings = None
-                for model_name in embedding_models:
+                for model_name in ["models/text-embedding-004", "models/gemini-embedding-exp-03-07"]:
                     try:
                         emb = DirectGoogleEmbeddings(model_name=model_name, api_key=api_key)
                         emb.embed_query("test")
@@ -167,101 +144,102 @@ if process_btn:
                     except Exception as emb_err:
                         st.sidebar.warning(f"Model `{model_name}` gagal: {emb_err}")
                         continue
-                
+
                 if embeddings is None:
                     st.sidebar.error(
-                        "❌ Semua model embedding gagal. Pastikan:\n"
-                        "1. Google API Key Anda benar dan valid.\n"
-                        "2. API Key memiliki akses ke Gemini API.\n"
-                        "3. Tidak ada spasi tersembunyi di API Key."
+                        "❌ Semua model embedding gagal.\n"
+                        "Pastikan API Key valid dan memiliki akses ke Gemini API."
                     )
-                    raise ValueError("Tidak ada model embedding yang berhasil.")
-                
-                # Storage to ChromaDB
+                    st.stop()
+
+                # Simpan ke ChromaDB
                 try:
                     vectorstore = Chroma.from_documents(
-                        documents=all_splits, 
-                        embedding=embeddings, 
+                        documents=all_splits,
+                        embedding=embeddings,
                         persist_directory=persist_dir
                     )
-                    # Initialize retriever in session state
                     st.session_state.retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-                    st.sidebar.success("✅ Datasheet berhasil diproses dan disimpan ke database!")
+                    st.sidebar.success("✅ Dokumen berhasil diproses dan siap digunakan!")
                 except Exception as e:
                     st.sidebar.error(f"Gagal membuat Vector Database: {e}")
 
+
 # ==========================================
-# CHAT INTERFACE & LANGGRAPH AGENT
+# CHAT INTERFACE & GEMINI AGENT
 # ==========================================
-# Render previous messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# Chat Input
-if prompt := st.chat_input("Tanyakan spesifikasi atau cari alternatif komponen di web..."):
-    # Append user message to state
+if prompt := st.chat_input("Tanyakan sesuatu tentang dokumen yang diunggah..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    
-    # Validation before invoking agent
+
     if not os.environ.get("GOOGLE_API_KEY"):
-        st.error("Google API Key diperlukan untuk merespons percakapan.")
+        st.error("❌ Google API Key diperlukan untuk merespons percakapan.")
     else:
         with st.chat_message("assistant"):
-            with st.spinner("Berpikir dan mencari informasi..."):
-                tools = [web_search]
-                
-                # Add Retriever tool if PDF has been processed
+            with st.spinner("Sedang berpikir..."):
+                tools = []
+
+                # Tambahkan Retriever Tool jika dokumen sudah diproses
                 if st.session_state.retriever:
-                    datasheet_tool = create_retriever_tool(
+                    doc_tool = create_retriever_tool(
                         st.session_state.retriever,
-                        "datasheet_search",
-                        "Search and return information from the uploaded datasheet PDFs. Useful for finding technical specifications, pinouts, electrical characteristics, and component features."
+                        "document_search",
+                        "Cari informasi dari dokumen PDF yang sudah diunggah. "
+                        "Gunakan ini untuk menjawab pertanyaan tentang isi dokumen."
                     )
-                    tools.append(datasheet_tool)
-                
-                # LLM Initialization
-                # Memastikan tidak menggunakan "gemini-1.5-flash" biasa untuk menghindari error 404 v1beta routing
+                    tools.append(doc_tool)
+
+                # Inisialisasi LLM Gemini
                 llm = ChatGoogleGenerativeAI(
                     model="gemini-1.5-flash-latest",
-                    temperature=0.2
+                    temperature=0.2,
+                    google_api_key=os.environ["GOOGLE_API_KEY"]
                 )
-                
-                # System Prompt
-                system_prompt = """You are DaSheet_BOT, a Senior Electronics Engineering AI Assistant.
-Your primary role is to help users analyze and compare electronic component datasheets.
-- Prioritize using the 'datasheet_search' tool for finding technical specifications, electrical characteristics, and pinouts from the user's uploaded documents.
-- Use the 'web_search' tool for finding live market prices, component availability, alternatives, and tutorials on the internet.
-- Combine information from both tools if the user asks for comparisons between the uploaded datasheet and alternative components on the market.
-- ALWAYS respond in Indonesian (Bahasa Indonesia) in a clear, professional, and helpful manner.
-"""
 
-                # Initialize LangGraph Agent
+                system_prompt = (
+                    "Kamu adalah DaSheet_BOT, asisten AI yang membantu pengguna memahami isi dokumen.\n"
+                    "- Gunakan tool 'document_search' untuk menjawab pertanyaan berdasarkan dokumen yang diunggah.\n"
+                    "- Jika informasi tidak ada di dokumen, sampaikan dengan jujur bahwa kamu tidak menemukan informasinya.\n"
+                    "- Selalu jawab dalam Bahasa Indonesia yang jelas dan profesional.\n"
+                )
+
                 try:
-                    agent = create_react_agent(
-                        llm, 
-                        tools=tools,
-                        state_modifier=system_prompt
-                    )
-                    
-                    # Prepare message history
-                    chat_history = []
-                    for msg in st.session_state.messages:
-                        if msg["role"] == "user":
-                            chat_history.append(HumanMessage(content=msg["content"]))
-                        elif msg["role"] == "assistant":
-                            chat_history.append(AIMessage(content=msg["content"]))
-                    
-                    # Invoke Agent
-                    response = agent.invoke({"messages": chat_history})
-                    final_answer = response["messages"][-1].content
-                    
-                    # Display response
+                    if tools:
+                        agent = create_react_agent(
+                            llm,
+                            tools=tools,
+                            state_modifier=system_prompt
+                        )
+                        chat_history = []
+                        for m in st.session_state.messages:
+                            if m["role"] == "user":
+                                chat_history.append(HumanMessage(content=m["content"]))
+                            elif m["role"] == "assistant":
+                                chat_history.append(AIMessage(content=m["content"]))
+
+                        response = agent.invoke({"messages": chat_history})
+                        final_answer = response["messages"][-1].content
+                    else:
+                        # Tidak ada dokumen — langsung tanya ke Gemini tanpa tools
+                        chat_history = []
+                        for m in st.session_state.messages:
+                            if m["role"] == "user":
+                                chat_history.append(HumanMessage(content=m["content"]))
+                            elif m["role"] == "assistant":
+                                chat_history.append(AIMessage(content=m["content"]))
+
+                        response = llm.invoke(
+                            [HumanMessage(content=system_prompt + "\n\nPertanyaan: " + prompt)]
+                        )
+                        final_answer = response.content
+
                     st.markdown(final_answer)
-                    
-                    # Save assistant response to state
                     st.session_state.messages.append({"role": "assistant", "content": final_answer})
+
                 except Exception as e:
-                    st.error(f"Terjadi kesalahan saat memproses agen: {e}")
+                    st.error(f"Terjadi kesalahan: {e}")
