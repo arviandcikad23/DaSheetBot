@@ -105,7 +105,7 @@ def request_gemini(prompt, system, api_key):
 
 # 7. SIDEBAR
 with st.sidebar:
-    st.title("DaSheet_BOT")
+    st.image("DasheetBOT.png", use_container_width=True)
     st.caption("AI Assistant with Auto-Database")
     st.markdown("---")
     
