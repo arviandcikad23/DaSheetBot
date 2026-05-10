@@ -228,7 +228,7 @@ def tanya_gemini(pertanyaan, instruksi_sistem, kunci_api_gemini):
 # ==========================================
 def tampilkan_sidebar():
     with st.sidebar:
-        st.image("dashetbot2.png", use_container_width=True)
+        st.image("DasheetBOT.png", use_container_width=True)
         st.caption("Asisten Pintar Analisis Datasheet")
         st.markdown("---")
         
