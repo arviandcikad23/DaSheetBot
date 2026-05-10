@@ -4,7 +4,7 @@ import os
 import time
 import shutil
 
-import google.genai as genai
+import requests
 from langchain_core.embeddings import Embeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -20,26 +20,33 @@ from langchain_core.messages import HumanMessage, AIMessage
 # Menghindari error 404 yang terjadi pada langchain-google-genai wrapper
 # ==========================================
 class DirectGoogleEmbeddings(Embeddings):
-    def __init__(self, model_name: str = "models/text-embedding-004", api_key: str = ""):
-        self.model_name = model_name
-        self.client = genai.Client(api_key=api_key)
+    """
+    Memanggil Google Generative Language REST API v1 secara langsung.
+    Menghindari semua masalah routing v1beta pada SDK LangChain dan google-genai.
+    Endpoint: https://generativelanguage.googleapis.com/v1/models/{model}:embedContent
+    """
+    def __init__(self, model_name: str = "text-embedding-004", api_key: str = ""):
+        self.model_name = model_name  # tanpa prefix 'models/'
+        self.api_key = api_key
+        self.url = (
+            f"https://generativelanguage.googleapis.com/v1/models/"
+            f"{model_name}:embedContent?key={api_key}"
+        )
+
+    def _call_api(self, text: str) -> list:
+        payload = {
+            "model": f"models/{self.model_name}",
+            "content": {"parts": [{"text": text}]}
+        }
+        resp = requests.post(self.url, json=payload, timeout=30)
+        resp.raise_for_status()
+        return resp.json()["embedding"]["values"]
 
     def embed_documents(self, texts: list) -> list:
-        results = []
-        for text in texts:
-            response = self.client.models.embed_content(
-                model=self.model_name,
-                contents=text,
-            )
-            results.append(response.embeddings[0].values)
-        return results
+        return [self._call_api(t) for t in texts]
 
     def embed_query(self, text: str) -> list:
-        response = self.client.models.embed_content(
-            model=self.model_name,
-            contents=text,
-        )
-        return response.embeddings[0].values
+        return self._call_api(text)
 
 
 # Fallback untuk create_retriever_tool jika tidak ditemukan di lokasi standar
@@ -134,7 +141,8 @@ if process_btn:
                 # Inisialisasi embedding menggunakan google-genai SDK
                 api_key = os.environ["GOOGLE_API_KEY"]
                 embeddings = None
-                for model_name in ["models/text-embedding-004", "models/gemini-embedding-exp-03-07"]:
+                # Nama model TANPA prefix 'models/' karena sudah ditambahkan di dalam kelas
+                for model_name in ["text-embedding-004", "gemini-embedding-exp-03-07"]:
                     try:
                         emb = DirectGoogleEmbeddings(model_name=model_name, api_key=api_key)
                         emb.embed_query("test")
